@@ -69,7 +69,7 @@ $authors = [
     </tbody>
 </table>
 
-<a class="create-btn" href="author_create.php">➕</a>
+<a class="create-btn" href="authorCreate.php">➕</a>
 
 </body>
 </html>
