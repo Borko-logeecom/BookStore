@@ -111,7 +111,7 @@ $authors = isset($_SESSION['authors']) ? $_SESSION['authors'] : [];
                 </td>
                 <td class="actions" style="text-align: right;">
                     <a href="authorEdit.php?id=<?= $author['id'] ?>">✏️</a>
-                    <a href="author_delete.php?id=<?= $author['id'] ?>">🗑️</a>
+                    <a href="authorDelete.php?id=<?= $author['id'] ?>">🗑️</a>
                 </td>
             </tr>
         <?php endforeach; ?>
