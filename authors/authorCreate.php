@@ -3,7 +3,7 @@
 ?>
 
     <!DOCTYPE html>
-    <html>
+    <html lang="en">
     <head>
         <title>Kreiraj Autora</title>
         <style>
@@ -21,8 +21,10 @@
             }
 
             h2 {
-                text-align: center;
-                margin-bottom: 20px;
+                text-align: left;
+                border-bottom: 2px solid #ADD8E6;
+                padding-bottom: 5px;
+                margin-bottom: 10px;
             }
 
             .form-group {
@@ -68,23 +70,23 @@
     </head>
     <body>
     <div class="container">
-        <h2>Kreiraj Autora</h2>
+        <h2 style="text-align: left;">Author Create</h2>
         <form action="processCreateAuthor.php" method="post" onsubmit="return validateForm()">
             <div class="form-group">
-                <label for="firstName">Ime:</label>
+                <label for="firstName">First name:</label>
                 <input type="text" id="firstName" name="firstName" maxlength="100" required
                        oninvalid="this.nextElementSibling.style.display='block'"
                        oninput="this.nextElementSibling.style.display='none'">
-                <p class="error-message">* Ovo polje je obavezno</p>
+                <p class="error-message">* This field is required</p>
             </div>
             <div class="form-group">
-                <label for="lastName">Prezime:</label>
+                <label for="lastName">Last name:</label>
                 <input type="text" id="lastName" name="lastName" maxlength="100" required
                        oninvalid="this.nextElementSibling.style.display='block'"
                        oninput="this.nextElementSibling.style.display='none'">
-                <p class="error-message">* Ovo polje je obavezno</p>
+                <p class="error-message">* This field is required</p>
             </div>
-            <button type="submit">Sačuvaj</button>
+            <button type="submit">Save</button>
 
             <script>
                 function validateForm() {

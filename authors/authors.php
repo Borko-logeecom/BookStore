@@ -1,10 +1,10 @@
 <?php
-$authors = [
-    ['id' => 1, 'name' => 'Pera Peric', 'books' => 6],
-    ['id' => 2, 'name' => 'Mika Mikic', 'books' => 2],
-    ['id' => 3, 'name' => 'Zika Zikic', 'books' => 3],
-    ['id' => 4, 'name' => 'Nikola Nikolic', 'books' => 0],
-];
+
+session_start();
+
+// Provera da li postoji niz autora u sesiji
+$authors = isset($_SESSION['authors']) ? $_SESSION['authors'] : [];
+
 ?>
 
 <!DOCTYPE html>
@@ -51,6 +51,7 @@ $authors = [
             text-decoration: none;
             border: 2px solid #007bff;
         }
+
         .create-btn:hover {
             background-color: #0056b3; /* Tamnija plava na hover */
             cursor: pointer; /* Menjamo kursor u pointer */
@@ -97,22 +98,28 @@ $authors = [
     </thead>
 
     <tbody>
-    <?php foreach ($authors as $author): ?>
+    <?php if (!empty($authors)): ?>
+        <?php foreach ($authors as $author): ?>
+            <tr>
+                <td>
+                    <a href="author_books.php?id=<?= $author['id'] ?>">
+                        👤 <?= htmlspecialchars($author['name']) ?>
+                    </a>
+                </td>
+                <td style="text-align: right;">
+                    <span class="book-count"><?= $author['books'] ?></span>
+                </td>
+                <td class="actions" style="text-align: right;">
+                    <a href="authorEdit.php?id=<?= $author['id'] ?>">✏️</a>
+                    <a href="author_delete.php?id=<?= $author['id'] ?>">🗑️</a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    <?php else: ?>
         <tr>
-            <td>
-                <a href="author_books.php?id=<?= $author['id'] ?>">
-                    👤 <?= htmlspecialchars($author['name']) ?>
-                </a>
-            </td>
-            <td style="text-align: right;">
-                <span class="book-count"><?= $author['books'] ?></span>
-            </td>
-            <td class="actions" style="text-align: right;">
-                <a href="authorEdit.php?id=<?= $author['id'] ?>">✏️</a>
-                <a href="author_delete.php?id=<?= $author['id'] ?>">🗑️</a>
-            </td>
+            <td colspan="3">Nema dodatih autora.</td>
         </tr>
-    <?php endforeach; ?>
+    <?php endif; ?>
     </tbody>
 </table>
 
