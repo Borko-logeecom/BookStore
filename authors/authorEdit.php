@@ -1,28 +1,5 @@
 <?php
-// Povezivanje sa nizom autora (u stvarnoj aplikaciji ovo bi bila baza podataka)
-$authors = [
-    ['id' => 1, 'name' => 'Pera Peric'],
-    ['id' => 2, 'name' => 'Mika Mikic'],
-    ['id' => 3, 'name' => 'Zika Zikic'],
-    ['id' => 4, 'name' => 'Nikola Nikolic'],
-];
-
-// Funkcija za pronalaženje autora po ID-u
-function getAuthorById($authors, $id)
-{
-    foreach ($authors as $author) {
-        if ($author['id'] == $id) {
-            // Razdvajamo ime i prezime (pretpostavljamo da su spojeni u 'name')
-            $nameParts = explode(' ', $author['name'], 2);
-            return [
-                'id' => $author['id'],
-                'firstName' => $nameParts[0] ?? '',
-                'lastName' => $nameParts[1] ?? ''
-            ];
-        }
-    }
-    return null;
-}
+session_start();
 
 // Provera da li je ID autora prosleđen
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
@@ -30,18 +7,35 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 }
 
 $authorId = $_GET['id'];
-$author = getAuthorById($authors, $authorId);
+$authorToEdit = null;
 
-// Ako autor ne postoji
-if (!$author) {
+// Provera da li postoji niz autora u sesiji
+if (isset($_SESSION['authors']) && is_array($_SESSION['authors'])) {
+    // Prolazimo kroz niz autora da pronađemo onog sa odgovarajućim ID-jem
+    foreach ($_SESSION['authors'] as $author) {
+        if (isset($author['id']) && $author['id'] == $authorId) {
+            // Razdvajamo ime i prezime (pretpostavljamo da su spojeni u 'name')
+            $nameParts = explode(' ', $author['name'], 2);
+            $authorToEdit = [
+                'id' => $author['id'],
+                'firstName' => $nameParts[0] ?? '',
+                'lastName' => $nameParts[1] ?? ''
+            ];
+            break; // Prekidamo petlju kada pronađemo autora
+        }
+    }
+}
+
+// Ako autor ne postoji u sesiji
+if (!$authorToEdit) {
     die("Greška: Autor sa ID-jem " . htmlspecialchars($authorId) . " ne postoji.");
 }
 
-$pageTitle = "Uredi Autora (" . htmlspecialchars($author['id']) . ")";
+$pageTitle = "Author Edit (" . htmlspecialchars($authorToEdit['id']) . ")";
 ?>
 
 <!DOCTYPE html>
-<html lang = "en">
+<html lang="en">
 <head>
     <title><?= $pageTitle ?></title>
     <style>
@@ -59,8 +53,10 @@ $pageTitle = "Uredi Autora (" . htmlspecialchars($author['id']) . ")";
         }
 
         h2 {
-            text-align: center;
-            margin-bottom: 20px;
+            text-align: left;
+            border-bottom: 2px solid #ADD8E6;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
         }
 
         .form-group {
@@ -105,26 +101,26 @@ $pageTitle = "Uredi Autora (" . htmlspecialchars($author['id']) . ")";
 </head>
 <body>
 <div class="container">
-    <h2><?= $pageTitle ?></h2>
+    <h2 style="text-align: left;"><?= $pageTitle ?></h2>
     <form action="processEditAuthor.php" method="post" onsubmit="return validateForm()">
-        <input type="hidden" name="id" value="<?= htmlspecialchars($author['id']) ?>">
+        <input type="hidden" name="id" value="<?= htmlspecialchars($authorToEdit['id']) ?>">
         <div class="form-group">
-            <label for="firstName">Ime:</label>
+            <label for="firstName">First name:</label>
             <input type="text" id="firstName" name="firstName" maxlength="100" required
-                   value="<?= htmlspecialchars($author['firstName']) ?>"
+                   value="<?= htmlspecialchars($authorToEdit['firstName']) ?>"
                    oninvalid="this.nextElementSibling.style.display='block'"
                    oninput="this.nextElementSibling.style.display='none'">
-            <p class="error-message">* Ovo polje je obavezno</p>
+            <p class="error-message">* This field is required</p>
         </div>
         <div class="form-group">
-            <label for="lastName">Prezime:</label>
+            <label for="lastName">Last name:</label>
             <input type="text" id="lastName" name="lastName" maxlength="100" required
-                   value="<?= htmlspecialchars($author['lastName']) ?>"
+                   value="<?= htmlspecialchars($authorToEdit['lastName']) ?>"
                    oninvalid="this.nextElementSibling.style.display='block'"
                    oninput="this.nextElementSibling.style.display='none'">
-            <p class="error-message">* Ovo polje je obavezno</p>
+            <p class="error-message">* This field is required</p>
         </div>
-        <button type="submit">Sačuvaj</button>
+        <button type="submit">Save</button>
     </form>
 </div>
 
