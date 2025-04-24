@@ -111,7 +111,8 @@ $authors = isset($_SESSION['authors']) ? $_SESSION['authors'] : [];
                 </td>
                 <td class="actions" style="text-align: right;">
                     <a href="authorEdit.php?id=<?= $author['id'] ?>">✏️</a>
-                    <a href="authorDelete.php?id=<?= $author['id'] ?>">🗑️</a>
+                    <a href="#"
+                       onclick="confirmDelete(<?= $author['id'] ?>, '<?= htmlspecialchars($author['name']) ?>')">🗑️</a>
                 </td>
             </tr>
         <?php endforeach; ?>
@@ -124,6 +125,45 @@ $authors = isset($_SESSION['authors']) ? $_SESSION['authors'] : [];
 </table>
 
 <a class="create-btn" href="authorCreate.php">+</a>
+
+<div id="deleteConfirmationModal"
+     style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center;">
+    <div style="background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); width: 400px;">
+        <div style="display: flex; align-items: center; margin-bottom: 15px;">
+            <span style="color: #dc3545; font-size: 1.5em; margin-right: 10px;">⚠️</span>
+            <h3 style="margin: 0;">Delete Author</h3>
+        </div>
+        <p id="deleteConfirmationText">You are about to delete the author '<span id="authorToDeleteName"></span>'?
+            If you proceed with this action, application will permanently delete all books related to this author.</p>
+        <div style="display: flex; justify-content: flex-end;">
+            <button style="background-color: #dc3545; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; margin-left: 10px;"
+                    onclick="deleteAuthor()">Delete
+            </button>
+            <button style="background-color: #6c757d; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; margin-left: 10px;"
+                    onclick="closeDeleteModal()">Cancel
+            </button>
+
+            <input type="hidden" id="authorIdToDelete">
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmDelete(authorId, authorName) {
+        document.getElementById('authorToDeleteName').textContent = authorName;
+        document.getElementById('authorIdToDelete').value = authorId;
+        document.getElementById('deleteConfirmationModal').style.display = 'flex';
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteConfirmationModal').style.display = 'none';
+    }
+
+    function deleteAuthor() {
+        const authorId = document.getElementById('authorIdToDelete').value;
+        window.location.href = 'authorDelete.php?id=' + authorId;
+    }
+</script>
 
 </body>
 </html>
