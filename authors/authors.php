@@ -61,7 +61,7 @@ $authors = [
                 </td>
                 <td><?= $author['books'] ?></td>
                 <td class="actions">
-                    <a href="author_edit.php?id=<?= $author['id'] ?>">✏️</a>
+                    <a href="authorEdit.php?id=<?= $author['id'] ?>">✏️</a>
                     <a href="author_delete.php?id=<?= $author['id'] ?>">🗑️</a>
                 </td>
             </tr>
