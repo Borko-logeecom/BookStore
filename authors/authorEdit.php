@@ -1,34 +1,34 @@
 <?php
 session_start();
 
-// Provera da li je ID autora prosleđen
+// Check if the author ID is passed
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-    die("Greška: Nedostaje validan ID autora.");
+    die("Error: Missing or invalid author ID.");
 }
 
 $authorId = $_GET['id'];
 $authorToEdit = null;
 
-// Provera da li postoji niz autora u sesiji
+// Check if the authors array exists in the session
 if (isset($_SESSION['authors']) && is_array($_SESSION['authors'])) {
-    // Prolazimo kroz niz autora da pronađemo onog sa odgovarajućim ID-jem
+    // Loop through the authors array to find the one with the matching ID
     foreach ($_SESSION['authors'] as $author) {
         if (isset($author['id']) && $author['id'] == $authorId) {
-            // Razdvajamo ime i prezime (pretpostavljamo da su spojeni u 'name')
+            // Separate first and last names (assuming they are joined in 'name')
             $nameParts = explode(' ', $author['name'], 2);
             $authorToEdit = [
                 'id' => $author['id'],
                 'firstName' => $nameParts[0] ?? '',
                 'lastName' => $nameParts[1] ?? ''
             ];
-            break; // Prekidamo petlju kada pronađemo autora
+            break; // Stop the loop when the author is found
         }
     }
 }
 
-// Ako autor ne postoji u sesiji
+// If the author does not exist in the session
 if (!$authorToEdit) {
-    die("Greška: Autor sa ID-jem " . htmlspecialchars($authorId) . " ne postoji.");
+    die("Error: Author with ID " . htmlspecialchars($authorId) . " does not exist.");
 }
 
 $pageTitle = "Author Edit (" . htmlspecialchars($authorToEdit['id']) . ")";

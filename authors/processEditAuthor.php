@@ -2,72 +2,72 @@
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Provera da li su ID, ime i prezime prisutni
+    // Check if ID, first name, and last name are present
     if (isset($_POST['id']) && is_numeric($_POST['id']) && isset($_POST['firstName']) && isset($_POST['lastName'])) {
         $authorIdToEdit = $_POST['id'];
         $firstName = trim($_POST['firstName']);
         $lastName = trim($_POST['lastName']);
         $fullName = $firstName . ' ' . $lastName;
 
-        // Osnovna validacija (isto kao kod kreiranja)
+        // Basic validation (same as during creation)
         if (empty($firstName)) {
-            $_SESSION['edit_error'] = "Greška: Ime je obavezno.";
+            $_SESSION['edit_error'] = "Error: First name is required.";
             header("Location: authorEdit.php?id=" . $authorIdToEdit);
             exit();
         }
         if (strlen($firstName) > 100) {
-            $_SESSION['edit_error'] = "Greška: Ime ne sme biti duže od 100 karaktera.";
+            $_SESSION['edit_error'] = "Error: First name cannot be longer than 100 characters.";
             header("Location: authorEdit.php?id=" . $authorIdToEdit);
             exit();
         }
         if (empty($lastName)) {
-            $_SESSION['edit_error'] = "Greška: Prezime je obavezno.";
+            $_SESSION['edit_error'] = "Error: Last name is required.";
             header("Location: authorEdit.php?id=" . $authorIdToEdit);
             exit();
         }
         if (strlen($lastName) > 100) {
-            $_SESSION['edit_error'] = "Greška: Prezime ne sme biti duže od 100 karaktera.";
+            $_SESSION['edit_error'] = "Error: Last name cannot be longer than 100 characters.";
             header("Location: authorEdit.php?id=" . $authorIdToEdit);
             exit();
         }
 
-        // Provera da li postoji niz autora u sesiji
+        // Check if the authors array exists in the session
         if (isset($_SESSION['authors']) && is_array($_SESSION['authors'])) {
             $authors = &$_SESSION['authors'];
             $authorUpdated = false;
 
-            // Prolazimo kroz niz autora da pronađemo onog sa odgovarajućim ID-jem i ažuriramo ga
+            // Loop through the authors array to find the one with the matching ID and update it
             foreach ($authors as $index => $author) {
                 if (isset($author['id']) && $author['id'] == $authorIdToEdit) {
                     $authors[$index]['name'] = $fullName;
-                    // Ako želiš da čuvaš i odvojeno ime i prezime u sesiji, uradi to ovde:
+                    // If you want to store first and last names separately in the session, do it here:
                     // $authors[$index]['firstName'] = $firstName;
                     // $authors[$index]['lastName'] = $lastName;
                     $authorUpdated = true;
-                    break; // Prekidamo petlju kada pronađemo i ažuriramo autora
+                    break; // Stop the loop when the author is found and updated
                 }
             }
 
             if ($authorUpdated) {
-                $_SESSION['edit_success'] = "Autor sa ID-jem " . $authorIdToEdit . " je uspešno ažuriran.";
+                $_SESSION['edit_success'] = "Author with ID " . $authorIdToEdit . " has been successfully updated.";
             } else {
-                $_SESSION['edit_error'] = "Greška: Autor sa ID-jem " . $authorIdToEdit . " nije pronađen za uređivanje.";
+                $_SESSION['edit_error'] = "Error: Author with ID " . $authorIdToEdit . " was not found for editing.";
             }
         } else {
-            $_SESSION['edit_error'] = "Greška: Došlo je do problema sa listom autora.";
+            $_SESSION['edit_error'] = "Error: There was a problem with the author list.";
         }
 
-        // Preusmeravanje nazad na listu autora
+        // Redirect back to the author list
         header("Location: authors.php");
         exit();
 
     } else {
-        $_SESSION['edit_error'] = "Greška: Nedostaju podaci za uređivanje autora.";
+        $_SESSION['edit_error'] = "Error: Missing author data for editing.";
         header("Location: authors.php");
         exit();
     }
 } else {
-    // Ako se pristupi fajlu direktno (nije POST zahtev)
+    // If the file is accessed directly (not a POST request)
     header("Location: authors.php");
     exit();
 }

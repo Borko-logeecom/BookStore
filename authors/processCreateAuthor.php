@@ -8,34 +8,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($firstName) && !empty($lastName)) {
         $name = trim($firstName) . ' ' . trim($lastName);
 
-        // Generisanje jedinstvenog ID-ja (za potrebe sesije, možemo koristiti timestamp)
+        // Generating a unique ID (for session purposes, we can use timestamp)
         $id = time();
 
         $newAuthor = [
             'id' => $id,
             'name' => $name,
-            'books' => 0 // Početni broj knjiga je 0
+            'books' => 0 // Initial number of books is 0
         ];
 
-        // Provera da li postoji niz autora u sesiji
+        // Check if the authors array exists in the session
         if (!isset($_SESSION['authors'])) {
             $_SESSION['authors'] = [];
         }
 
-        // Dodavanje novog autora u niz
+        // Adding the new author to the array
         $_SESSION['authors'][] = $newAuthor;
 
-        // Preusmeravanje nazad na listu autora
+        // Redirecting back to the author list
         header("Location: authors.php");
         exit();
     } else {
-        // Ako ime ili prezime nisu popunjeni, možeš preusmeriti nazad na formu sa porukom o grešci
-        // Za sada ćemo jednostavno preusmeriti nazad
+        // If first name or last name are not filled, you can redirect back to the form with an error message
+        // For now, we will simply redirect back
         header("Location: authorCreate.php");
         exit();
     }
 } else {
-    // Ako se pristupa fajlu direktno (nije POST zahtev), preusmeri na listu autora
+    // If the file is accessed directly (not a POST request), redirect to the author list
     header("Location: authors.php");
     exit();
 }

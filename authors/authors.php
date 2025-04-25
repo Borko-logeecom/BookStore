@@ -2,7 +2,7 @@
 
 session_start();
 
-// Provera da li postoji niz autora u sesiji
+// Check if the authors array exists in the session
 $authors = isset($_SESSION['authors']) ? $_SESSION['authors'] : [];
 
 ?>
@@ -42,10 +42,10 @@ $authors = isset($_SESSION['authors']) ? $_SESSION['authors'] : [];
             margin-top: -10px;
             margin-left: 20%;
             vertical-align: middle;
-            width: 33px; /* Postavljamo širinu kruga */
-            height: 33px; /* Postavljamo visinu kruga */
-            line-height: 33px; /* Vertikalno centriramo plus */
-            border-radius: 50%; /* Činimo ga krugom */
+            width: 33px; /* Set the width of the circle */
+            height: 33px; /* Set the height of the circle */
+            line-height: 33px; /* Vertically center the plus sign */
+            border-radius: 50%; /* Make it a circle */
             background-color: white;
             color: #007bff;
             text-decoration: none;
@@ -53,32 +53,32 @@ $authors = isset($_SESSION['authors']) ? $_SESSION['authors'] : [];
         }
 
         .create-btn:hover {
-            background-color: #0056b3; /* Tamnija plava na hover */
-            cursor: pointer; /* Menjamo kursor u pointer */
+            background-color: #0056b3; /* Darker blue on hover */
+            cursor: pointer; /* Change cursor to pointer */
         }
 
 
         .book-count {
             display: inline-block;
-            width: 20px; /* Podesi veličinu kruga po potrebi */
-            height: 20px; /* Podesi veličinu kruga po potrebi */
-            line-height: 20px; /* Centrira tekst vertikalno */
-            border-radius: 50%; /* Čini element krugom */
-            background-color: #f0f0f0; /* Boja pozadine kruga */
-            color: #333; /* Boja teksta (broja) */
-            font-size: 0.8em; /* Veličina fonta broja */
+            width: 20px; /* Adjust the size of the circle as needed */
+            height: 20px; /* Adjust the size of the circle as needed */
+            line-height: 20px; /* Center the text vertically */
+            border-radius: 50%; /* Make the element a circle */
+            background-color: #f0f0f0; /* Background color of the circle */
+            color: #333; /* Text color (the number) */
+            font-size: 0.8em; /* Font size of the number */
             text-align: center;
-            margin-left: 5px; /* Mali razmak od teksta autora */
+            margin-left: 5px; /* Small space from the author's text */
         }
 
         tbody td a {
-            color: black; /* Postavlja boju linka na plavu */
-            text-decoration: none; /* Uklanja podvlačenje po defaultu */
+            color: black; /* Sets the link color to blue */
+            text-decoration: none; /* Removes the default underline */
             font-weight: bold;
         }
 
         tbody td a:hover {
-            text-decoration: underline; /* Podvlači link kada se pređe mišem */
+            text-decoration: underline; /* Underline the link on hover */
         }
 
     </style>
@@ -118,7 +118,7 @@ $authors = isset($_SESSION['authors']) ? $_SESSION['authors'] : [];
         <?php endforeach; ?>
     <?php else: ?>
         <tr>
-            <td colspan="3">Nema dodatih autora.</td>
+            <td colspan="3">No authors added.</td>
         </tr>
     <?php endif; ?>
     </tbody>
@@ -167,4 +167,3 @@ $authors = isset($_SESSION['authors']) ? $_SESSION['authors'] : [];
 
 </body>
 </html>
-

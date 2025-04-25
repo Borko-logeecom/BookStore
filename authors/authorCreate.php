@@ -1,11 +1,11 @@
 <?php
-// Ovde može ići PHP kod ako je potreban pre prikaza forme
+// PHP code can go here if needed before displaying the form
 ?>
 
     <!DOCTYPE html>
     <html lang="en">
     <head>
-        <title>Kreiraj Autora</title>
+        <title>Create Author</title>
         <style>
             body {
                 font-family: sans-serif;
@@ -52,7 +52,7 @@
                 display: none;
             }
 
-            /* Sakrivamo poruke inicijalno */
+            /* Initially hide messages */
             button[type="submit"] {
                 background-color: #007bff;
                 color: white;
@@ -119,5 +119,5 @@
     </html>
 
 <?php
-// Ovde može ići PHP kod nakon prikaza forme
+// PHP code can go here after displaying the form
 ?>
