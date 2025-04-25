@@ -1,42 +1,66 @@
 <?php
+
+use BookStore\Application\AuthorService;
+use BookStore\Infrastructure\Persistence\Session\SessionAuthorRepository;
+
 session_start();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $firstName = $_POST['firstName'];
-    $lastName = $_POST['lastName'];
+// Include necessary files
+require_once __DIR__ . '/../src/Application/AuthorService.php';
+require_once __DIR__ . '/../src/Infrastructure/Persistence/Session/SessionAuthorRepository.php';
 
-    if (!empty($firstName) && !empty($lastName)) {
-        $name = trim($firstName) . ' ' . trim($lastName);
+// Create instances of the repository and the service
+$sessionAuthorRepository = new SessionAuthorRepository();
+$authorService = new AuthorService($sessionAuthorRepository);
 
-        // Generating a unique ID (for session purposes, we can use timestamp)
-        $id = time();
-
-        $newAuthor = [
-            'id' => $id,
-            'name' => $name,
-            'books' => 0 // Initial number of books is 0
-        ];
-
-        // Check if the authors array exists in the session
-        if (!isset($_SESSION['authors'])) {
-            $_SESSION['authors'] = [];
-        }
-
-        // Adding the new author to the array
-        $_SESSION['authors'][] = $newAuthor;
-
-        // Redirecting back to the author list
-        header("Location: authors.php");
-        exit();
-    } else {
-        // If first name or last name are not filled, you can redirect back to the form with an error message
-        // For now, we will simply redirect back
-        header("Location: authorCreate.php");
-        exit();
-    }
-} else {
-    // If the file is accessed directly (not a POST request), redirect to the author list
-    header("Location: authors.php");
+// Check if the request method is POST
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    // If not POST, redirect back to the author creation form
+    header("Location: authorCreate.php");
     exit();
 }
-?>
+
+// Check if first name and last name are set in the POST data
+if (!isset($_POST['firstName']) || !isset($_POST['lastName'])) {
+    $_SESSION['create_error'] = "Error: First name and last name are required.";
+    header("Location: authorCreate.php");
+    exit();
+}
+
+$firstName = trim($_POST['firstName']);
+$lastName = trim($_POST['lastName']);
+
+// Basic validation (ideally this should be in the AuthorService)
+if (empty($firstName)) {
+    $_SESSION['create_error'] = "Error: First name is required.";
+    header("Location: authorCreate.php");
+    exit();
+}
+if (strlen($firstName) > 100) {
+    $_SESSION['create_error'] = "Error: First name cannot be longer than 100 characters.";
+    header("Location: authorCreate.php");
+    exit();
+}
+if (empty($lastName)) {
+    $_SESSION['create_error'] = "Error: Last name is required.";
+    header("Location: authorCreate.php");
+    exit();
+}
+if (strlen($lastName) > 100) {
+    $_SESSION['create_error'] = "Error: Last name cannot be longer than 100 characters.";
+    header("Location: authorCreate.php");
+    exit();
+}
+
+// Create the author using the service
+$newAuthor = $authorService->createAuthor($firstName, $lastName);
+
+if ($newAuthor) {
+    $_SESSION['create_success'] = "Author " . $newAuthor['name'] . " has been successfully created.";
+    header("Location: authors.php");
+    exit();
+} else {
+    $_SESSION['create_error'] = "Error: Failed to create author.";
+    header("Location: authorCreate.php");
+    exit();
+}
