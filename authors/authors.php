@@ -161,7 +161,7 @@ $authors = isset($_SESSION['authors']) ? $_SESSION['authors'] : [];
 
     function deleteAuthor() {
         const authorId = document.getElementById('authorIdToDelete').value;
-        window.location.href = 'authorDelete.php?id=' + authorId;
+        window.location.href = 'processDeleteAuthor.php?id=' + authorId;
     }
 </script>
 
