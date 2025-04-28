@@ -27,5 +27,5 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 }
 
 // Redirect back to the author list
-header("Location: ../public/authors.phtml");
+header("Location: ../public/pages/authors.phtml");
 exit();
