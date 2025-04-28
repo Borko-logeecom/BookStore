@@ -1,15 +1,22 @@
 <?php
 
+/**
+ * Front controller for the BookStore application.
+ * Handles all incoming requests and dispatches them to the appropriate controller action.
+ */
 
-// Učitavanje kontrolera
+// Load the author controller
 require_once __DIR__ . '/../src/Controller/AuthorController.php';
 
 use BookStore\Controller\AuthorController;
 
-$action = $_GET['action'] ?? $_POST['action'] ?? 'index'; // Default akcija je index (lista autora)
+// Determine the requested action from GET or POST parameters
+$action = $_GET['action'] ?? $_POST['action'] ?? 'index'; // Default action is index (author list)
 
+// Instantiate the AuthorController
 $controller = new AuthorController();
 
+// Route the request to the appropriate controller method based on the action
 switch ($action) {
     case 'create':
         $controller->create();
@@ -22,7 +29,7 @@ switch ($action) {
         if ($id !== null && is_numeric($id)) {
             $controller->edit((int)$id);
         } else {
-            // Обработка грешке за недостајући или невалидан ИД
+            // Handle error for missing or invalid ID
             echo "Error: Invalid or missing author ID for editing.";
             exit();
         }
@@ -32,7 +39,7 @@ switch ($action) {
         if ($id !== null && is_numeric($id)) {
             $controller->processEdit((int)$id);
         } else {
-            // Обработка грешке за недостајући или невалидан ИД
+            // Handle error for missing or invalid ID
             echo "Error: Invalid or missing author ID for processing edit.";
             exit();
         }
@@ -42,7 +49,7 @@ switch ($action) {
         if ($id !== null && is_numeric($id)) {
             $controller->delete((int)$id);
         } else {
-            // Обработка грешке за недостајући или невалидан ИД
+            // Handle error for missing or invalid ID
             echo "Error: Invalid or missing author ID for deletion.";
             exit();
         }

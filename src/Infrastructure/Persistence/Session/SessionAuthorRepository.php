@@ -4,11 +4,22 @@ namespace BookStore\Infrastructure\Persistence\Session;
 
 class SessionAuthorRepository
 {
+    /**
+     * Retrieves all authors from the session.
+     *
+     * @return array
+     */
     public function getAll(): array
     {
         return $_SESSION['authors'] ?? [];
     }
 
+    /**
+     * Retrieves a specific author from the session by their ID.
+     *
+     * @param int $id
+     * @return array|null
+     */
     public function getById(int $id): ?array
     {
         if (!isset($_SESSION['authors']) || !is_array($_SESSION['authors'])) {
@@ -22,6 +33,13 @@ class SessionAuthorRepository
         return null;
     }
 
+    /**
+     * Saves author data to the session. If the author data contains an 'id', it updates
+     * the existing author. Otherwise, it creates a new author with an auto-incrementing ID.
+     *
+     * @param array $authorData
+     * @return void
+     */
     public function save(array $authorData): void
     {
         if (!isset($_SESSION['author_id_counter'])) {
@@ -42,6 +60,12 @@ class SessionAuthorRepository
         }
     }
 
+    /**
+     * Deletes an author from the session by their ID.
+     *
+     * @param int $id
+     * @return void
+     */
     public function delete(int $id): void
     {
         if (!isset($_SESSION['authors']) || !is_array($_SESSION['authors'])) {
