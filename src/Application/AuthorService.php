@@ -2,15 +2,16 @@
 
 namespace BookStore\Application;
 
+include __DIR__ . "/../Infrastructure/Persistence/Session/SessionAuthorRepository.php";
 use BookStore\Infrastructure\Persistence\Session\SessionAuthorRepository;
 
 class AuthorService
 {
     private SessionAuthorRepository $authorRepository;
 
-    public function __construct(SessionAuthorRepository $authorRepository)
+    public function __construct()
     {
-        $this->authorRepository = $authorRepository;
+        $this->authorRepository = new SessionAuthorRepository();
     }
 
     public function getAllAuthors(): array

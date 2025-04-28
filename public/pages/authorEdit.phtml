@@ -45,7 +45,7 @@ $pageTitle = "Author Edit (" . htmlspecialchars($authorToEdit['id']) . ")";
 <body>
 <div class="container">
     <h2 style="text-align: left;"><?= $pageTitle ?></h2>
-    <form action="../../controllers/processEditAuthor.php" method="post" onsubmit="return validateForm()">
+    <form action="../index.php?action=processEdit&id=<?= htmlspecialchars($authorToEdit['id']) ?>" method="post" onsubmit="return validateForm()">
         <input type="hidden" name="id" value="<?= htmlspecialchars($authorToEdit['id']) ?>">
         <div class="form-group">
             <label for="firstName">First name:</label>
