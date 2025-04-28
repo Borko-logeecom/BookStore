@@ -16,14 +16,14 @@
         <form action="../index.php?action=processCreate" method="post" onsubmit="return validateForm()">
             <div class="form-group">
                 <label for="firstName">First name:</label>
-                <input type="text" id="firstName" name="firstName" maxlength="100" required
+                <input type="text" id="firstName" name="firstName" maxlength="105" required
                        oninvalid="this.nextElementSibling.style.display='block'"
                        oninput="this.nextElementSibling.style.display='none'">
                 <p class="error-message">* This field is required</p>
             </div>
             <div class="form-group">
                 <label for="lastName">Last name:</label>
-                <input type="text" id="lastName" name="lastName" maxlength="100" required
+                <input type="text" id="lastName" name="lastName" maxlength="105" required
                        oninvalid="this.nextElementSibling.style.display='block'"
                        oninput="this.nextElementSibling.style.display='none'">
                 <p class="error-message">* This field is required</p>

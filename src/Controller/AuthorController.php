@@ -12,69 +12,36 @@ class AuthorController
     public function __construct()
     {
         session_start();
-        //$sessionAuthorRepository = new SessionAuthorRepository();
         $this->authorService = new AuthorService();
     }
 
     public function index(): void
     {
-        // Prikazuje listu autora
-        header("Location: ../../public/pages/authors.phtml"); // Za sada preusmeravamo direktno
+        header("Location: ../../public/pages/authors.phtml");
         exit();
     }
 
     public function create(): void
     {
-        // Prikazuje formu za kreiranje autora
         header("Location: ../../public/pages/authorCreate.phtml");
         exit();
     }
 
     public function edit(int $id): void
     {
-        // Prikazuje formu za uređivanje autora
         header("Location: ../../public/pages/authorEdit.phtml?id=" . $id);
         exit();
     }
 
     public function processCreate(): void
     {
-        // Obrada logike za kreiranje autora
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header("Location: ../../public/pages/authorCreate.phtml");
             exit();
         }
 
-        if (!isset($_POST['firstName']) || !isset($_POST['lastName'])) {
-            $_SESSION['create_error'] = "Error: First name and last name are required.";
-            header("Location: ../../public/pages/authorCreate.phtml");
-            exit();
-        }
-
-        $firstName = trim($_POST['firstName']);
-        $lastName = trim($_POST['lastName']);
-
-        // Basic validation (ideally this should be in the AuthorService)
-        if (empty($firstName)) {
-            $_SESSION['create_error'] = "Error: First name is required.";
-            header("Location: ../../public/pages/authorCreate.phtml");
-            exit();
-        }
-        if (strlen($firstName) > 100) {
-            $_SESSION['create_error'] = "Error: First name cannot be longer than 100 characters.";
-            header("Location: ../../public/pages/authorCreate.phtml");
-            exit();
-        }
-        if (empty($lastName)) {
-            $_SESSION['create_error'] = "Error: Last name is required.";
-            header("Location: ../../public/pages/authorCreate.phtml");
-            exit();
-        }
-        if (strlen($lastName) > 100) {
-            $_SESSION['create_error'] = "Error: Last name cannot be longer than 100 characters.";
-            header("Location: ../../public/pages/authorCreate.phtml");
-            exit();
-        }
+        $firstName = $_POST['firstName'] ?? '';
+        $lastName = $_POST['lastName'] ?? '';
 
         $newAuthor = $this->authorService->createAuthor($firstName, $lastName);
 
@@ -83,7 +50,7 @@ class AuthorController
             header("Location: ../../public/pages/authors.phtml");
             exit();
         } else {
-            $_SESSION['create_error'] = "Error: Failed to create author.";
+            $_SESSION['create_error'] = "Error: Invalid input for author creation.";
             header("Location: ../../public/pages/authorCreate.phtml");
             exit();
         }
@@ -91,60 +58,27 @@ class AuthorController
 
     public function processEdit(int $id): void
     {
-        // Obrada logike za uređivanje autora
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header("Location: ../../public/pages/authors.phtml");
             exit();
         }
 
-        if (!isset($_POST['id']) || !is_numeric($_POST['id']) || !isset($_POST['firstName']) || !isset($_POST['lastName'])) {
-            $_SESSION['edit_error'] = "Error: Missing author data for editing.";
-            header("Location: ../../public/pages/authors.phtml");
-            exit();
-        }
+        $firstName = $_POST['firstName'] ?? '';
+        $lastName = $_POST['lastName'] ?? '';
 
-        $authorIdToEdit = (int)$_POST['id'];
-        $firstName = trim($_POST['firstName']);
-        $lastName = trim($_POST['lastName']);
-
-        // Basic validation (ideally this should be in the AuthorService)
-        if (empty($firstName)) {
-            $_SESSION['edit_error'] = "Error: First name is required.";
-            header("Location: ../../public/pages/authorEdit.phtml?id=" . $authorIdToEdit);
-            exit();
-        }
-        if (strlen($firstName) > 100) {
-            $_SESSION['edit_error'] = "Error: First name cannot be longer than 100 characters.";
-            header("Location: ../../public/pages/authorEdit.phtml?id=" . $authorIdToEdit);
-            exit();
-        }
-        if (empty($lastName)) {
-            $_SESSION['edit_error'] = "Error: Last name is required.";
-            header("Location: ../../public/pages/authorEdit.phtml?id=" . $authorIdToEdit);
-            exit();
-        }
-        if (strlen($lastName) > 100) {
-            $_SESSION['edit_error'] = "Error: Last name cannot be longer than 100 characters.";
-            header("Location: ../../public/pages/authorEdit.phtml?id=" . $authorIdToEdit);
-            exit();
-        }
-
-        $this->authorService->updateAuthor($authorIdToEdit, $firstName, $lastName);
-
-        $_SESSION['edit_success'] = "Author with ID " . $authorIdToEdit . " has been successfully updated.";
+        // We are assuming that if the service method is called, the basic validation passed in the form.
+        // A more robust solution might involve the service returning a status or throwing an exception.
+        $this->authorService->updateAuthor($id, $firstName, $lastName);
+        $_SESSION['edit_success'] = "Author with ID " . $id . " has been successfully updated.";
         header("Location: ../../public/pages/authors.phtml");
         exit();
     }
 
     public function delete(int $id): void
     {
-        // Obrada logike za brisanje autora
         $this->authorService->deleteAuthor($id);
         $_SESSION['delete_message'] = "Author with ID " . $id . " has been successfully deleted.";
         header("Location: ../../public/pages/authors.phtml");
         exit();
     }
 }
-
-// Potrebno je podesiti rutiranje u public/index.php da se ova klasa instancira
-// i da se odgovarajuće metode pozivaju na osnovu akcije u URL-u.

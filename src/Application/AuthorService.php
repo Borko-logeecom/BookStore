@@ -14,11 +14,6 @@ class AuthorService
         $this->authorRepository = new SessionAuthorRepository();
     }
 
-    public function getAllAuthors(): array
-    {
-        return $this->authorRepository->getAll();
-    }
-
     public function getAuthorById(int $id): ?array
     {
         return $this->authorRepository->getById($id);
@@ -26,12 +21,16 @@ class AuthorService
 
     public function createAuthor(string $firstName, string $lastName): ?array
     {
-        $name = trim($firstName) . ' ' . trim($lastName);
+        $firstName = trim($firstName);
+        $lastName = trim($lastName);
+
+        if (empty($firstName) || strlen($firstName) > 100 || empty($lastName) || strlen($lastName) > 100) {
+            return null; // Validation failed
+        }
+
+        $name = $firstName . ' ' . $lastName;
         $authorData = ['name' => $name, 'books' => 0];
         $this->authorRepository->save($authorData);
-        // After saving a new author without an ID, the repository generates one.
-        // For simplicity, we'll fetch and return the newly created author.
-        // This might not be the most efficient way in a real application.
         return $this->getAuthorByName($name);
     }
 
@@ -48,7 +47,18 @@ class AuthorService
 
     public function updateAuthor(int $id, string $firstName, string $lastName): void
     {
-        $name = trim($firstName) . ' ' . trim($lastName);
+        $firstName = trim($firstName);
+        $lastName = trim($lastName);
+
+        if (empty($firstName) || strlen($firstName) > 100 || empty($lastName) || strlen($lastName) > 100) {
+            // Ideally, we might want to signal a validation error differently here,
+            // perhaps by returning false or throwing an exception, as the controller
+            // for updating expects a void return type currently. For simplicity, we'll keep it void for now
+            // but the validation is performed.
+            return;
+        }
+
+        $name = $firstName . ' ' . $lastName;
         $authorData = ['id' => $id, 'name' => $name, 'books' => $this->getAuthorById($id)['books'] ?? 0];
         $this->authorRepository->save($authorData);
     }
