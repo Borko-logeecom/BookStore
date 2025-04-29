@@ -2,7 +2,6 @@
 
 namespace BookStore\Controller;
 
-include __DIR__ . "/../Application/AuthorService.php";
 use BookStore\Application\AuthorService;
 
 class AuthorController

@@ -6,7 +6,7 @@
  */
 
 // Load the author controller
-require_once __DIR__ . '/../src/Controller/AuthorController.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use BookStore\Controller\AuthorController;
 

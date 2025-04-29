@@ -2,7 +2,6 @@
 
 namespace BookStore\Application;
 
-include __DIR__ . "/../Infrastructure/Persistence/Session/SessionAuthorRepository.php";
 use BookStore\Infrastructure\Persistence\Session\SessionAuthorRepository;
 
 class AuthorService
