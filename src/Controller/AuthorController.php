@@ -10,12 +10,14 @@ class AuthorController
 
     /**
      * Constructor.
-     * Initializes the AuthorController with an AuthorService instance and starts the session.
+     * Initializes the AuthorController with an AuthorService instance.
+     *
+     * @param AuthorService $authorService The AuthorService dependency.
      */
-    public function __construct()
+    public function __construct(AuthorService $authorService)
     {
         session_start();
-        $this->authorService = new AuthorService();
+        $this->authorService = $authorService;
     }
 
     /**

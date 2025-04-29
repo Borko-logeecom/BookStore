@@ -12,9 +12,9 @@ class AuthorService
      * Constructor.
      * Initializes the AuthorService with a SessionAuthorRepository instance.
      */
-    public function __construct()
+    public function __construct(SessionAuthorRepository $authorRepository)
     {
-        $this->authorRepository = new SessionAuthorRepository();
+        $this->authorRepository = $authorRepository;
     }
 
     /**
