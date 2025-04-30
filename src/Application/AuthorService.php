@@ -2,19 +2,29 @@
 
 namespace BookStore\Application;
 
-use BookStore\Infrastructure\Persistence\Session\SessionAuthorRepository;
+use BookStore\Infrastructure\Persistence\MySQL\MySQLAuthorRepository;
 
 class AuthorService
 {
-    private SessionAuthorRepository $authorRepository;
+    private MySQLAuthorRepository $authorRepository;
 
     /**
      * Constructor.
-     * Initializes the AuthorService with a SessionAuthorRepository instance.
+     * Initializes the AuthorService with a MySQLAuthorRepository instance.
      */
-    public function __construct(SessionAuthorRepository $authorRepository)
+    public function __construct(MySQLAuthorRepository $authorRepository)
     {
         $this->authorRepository = $authorRepository;
+    }
+
+    /**
+     * Retrieves all authors.
+     *
+     * @return array
+     */
+    public function getAllAuthors(): array
+    {
+        return $this->authorRepository->getAll();
     }
 
     /**

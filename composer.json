@@ -11,5 +11,7 @@
             "email": "borko.stojanovic@logeecom.com"
         }
     ],
-    "require": {}
+    "require": {
+      "ext-pdo": "*"
+    }
 }

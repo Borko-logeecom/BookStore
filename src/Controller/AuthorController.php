@@ -28,6 +28,10 @@ class AuthorController
      */
     public function index(): void
     {
+        $authors = $this->authorService->getAllAuthors();
+
+        $_SESSION['authors'] = $authors;
+
         header("Location: ../../public/pages/authors.phtml");
         exit();
     }
@@ -78,7 +82,7 @@ class AuthorController
 
         if ($newAuthor) {
             $_SESSION['create_success'] = "Author " . htmlspecialchars($newAuthor['name']) . " has been successfully created.";
-            header("Location: ../../public/pages/authors.phtml");
+            header("Location: ../../public/index.php?action=index");
             exit();
         } else {
             $_SESSION['create_error'] = "Error: Invalid input for author creation.";
@@ -109,7 +113,7 @@ class AuthorController
         // A more robust solution might involve the service returning a status or throwing an exception.
         $this->authorService->updateAuthor($id, $firstName, $lastName);
         $_SESSION['edit_success'] = "Author with ID " . $id . " has been successfully updated.";
-        header("Location: ../../public/pages/authors.phtml");
+        header("Location: ../../public/index.php?action=index");
         exit();
     }
 
@@ -125,7 +129,7 @@ class AuthorController
     {
         $this->authorService->deleteAuthor($id);
         $_SESSION['delete_message'] = "Author with ID " . $id . " has been successfully deleted.";
-        header("Location: ../../public/pages/authors.phtml");
+        header("Location: ../../public/index.php?action=index");
         exit();
     }
 }
