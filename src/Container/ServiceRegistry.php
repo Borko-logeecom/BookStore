@@ -6,6 +6,8 @@ class ServiceRegistry
 {
     private static array $services = [];
 
+
+
     /**
      * Registers a service instance with a given name.
      *
@@ -26,6 +28,21 @@ class ServiceRegistry
      */
     public static function get(string $name): ?object
     {
+        if (isset(self::$services[$name])) {
+            return self::$services[$name];
+        }
+
+        $factory = new ServiceFactory();
+
+        $sessionAuthorRepository = $factory->createsessionAuthorRepository();
+        self::set('sessionAuthorRepository', $sessionAuthorRepository);
+
+        $authorService = $factory->createAuthorService();
+        self::set('authorService', $authorService);
+
+        $authorController = $factory->createAuthorController();
+        self::set('AuthorController', $authorController);
+
         return self::$services[$name] ?? null;
     }
 }
