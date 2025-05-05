@@ -2,6 +2,10 @@
 
 namespace BookStore\Container;
 
+/**
+ * Simple registry acting as a basic Service Locator.
+ * Stores and provides access to service instances.
+ */
 class ServiceRegistry
 {
     private static array $services = [];
@@ -20,9 +24,11 @@ class ServiceRegistry
 
     /**
      * Retrieves a service instance by its name.
+     * If the service is not found, it initializes and registers core services
+     * using the ServiceFactory before attempting to retrieve the requested service.
      *
      * @param string $name The name of the service to retrieve.
-     * @return ?object The service instance if found, null otherwise.
+     * @return object|null The service instance if found, null otherwise.
      */
     public static function get(string $name): ?object
     {

@@ -2,12 +2,16 @@
 
 namespace BookStore\Infrastructure\Persistence\Session;
 
+/**
+ * Repository class for interacting with author data stored in PHP sessions.
+ * NOTE: This repository is intended for legacy data handling and is being replaced by MySQL.
+ */
 class SessionAuthorRepository
 {
     /**
      * Retrieves all authors from the session.
      *
-     * @return array
+     * @return array A list of all authors stored in the session.
      */
     public function getAll(): array
     {
@@ -17,8 +21,8 @@ class SessionAuthorRepository
     /**
      * Retrieves a specific author from the session by their ID.
      *
-     * @param int $id
-     * @return array|null
+     * @param int $id The ID of the author to retrieve.
+     * @return array|null The author data as an associative array, or null if not found.
      */
     public function getById(int $id): ?array
     {
@@ -37,7 +41,7 @@ class SessionAuthorRepository
      * Saves author data to the session. If the author data contains an 'id', it updates
      * the existing author. Otherwise, it creates a new author with an auto-incrementing ID.
      *
-     * @param array $authorData
+     * @param array $authorData Associative array containing author data (['id' => ..., 'name' => ..., 'books' => ...] or ['name' => ..., 'books' => ...]).
      * @return void
      */
     public function save(array $authorData): void
@@ -63,7 +67,7 @@ class SessionAuthorRepository
     /**
      * Deletes an author from the session by their ID.
      *
-     * @param int $id
+     * @param int $id The ID of the author to delete.
      * @return void
      */
     public function delete(int $id): void

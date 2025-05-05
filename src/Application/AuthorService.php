@@ -4,6 +4,9 @@ namespace BookStore\Application;
 
 use BookStore\Infrastructure\Persistence\MySQL\MySQLAuthorRepository;
 
+/**
+ * Service class for handling author-related business logic.
+ */
 class AuthorService
 {
     private MySQLAuthorRepository $authorRepository;
@@ -11,6 +14,8 @@ class AuthorService
     /**
      * Constructor.
      * Initializes the AuthorService with a MySQLAuthorRepository instance.
+     *
+     * @param MySQLAuthorRepository $authorRepository The AuthorRepository dependency.
      */
     public function __construct(MySQLAuthorRepository $authorRepository)
     {
@@ -20,7 +25,7 @@ class AuthorService
     /**
      * Retrieves all authors.
      *
-     * @return array
+     * @return array A list of all authors.
      */
     public function getAllAuthors(): array
     {
@@ -30,8 +35,8 @@ class AuthorService
     /**
      * Retrieves an author by their ID.
      *
-     * @param int $id
-     * @return array|null
+     * @param int $id The ID of the author to retrieve.
+     * @return array|null The author data as an associative array, or null if not found.
      */
     public function getAuthorById(int $id): ?array
     {
@@ -42,9 +47,9 @@ class AuthorService
      * Creates a new author.
      * Performs validation on the first and last names before saving.
      *
-     * @param string $firstName
-     * @param string $lastName
-     * @return array|null
+     * @param string $firstName The first name of the author.
+     * @param string $lastName The last name of the author.
+     * @return array|null The newly created author data, or null if validation failed.
      */
     public function createAuthor(string $firstName, string $lastName): ?array
     {
@@ -57,15 +62,16 @@ class AuthorService
 
         $name = $firstName . ' ' . $lastName;
         $authorData = ['name' => $name, 'books' => 0];
-        $this->authorRepository->save($authorData);
-        return $this->getAuthorByName($name);
+        $newAuthorId = $this->authorRepository->create($authorData);
+
+        return $this->getAuthorById($newAuthorId);
     }
 
     /**
      * Retrieves an author by their full name.
      *
-     * @param string $name
-     * @return array|null
+     * @param string $name The full name of the author.
+     * @return array|null The author data as an associative array, or null if not found.
      */
     private function getAuthorByName(string $name): ?array
     {
@@ -75,6 +81,7 @@ class AuthorService
                 return $author;
             }
         }
+
         return null;
     }
 
@@ -82,9 +89,9 @@ class AuthorService
      * Updates an existing author.
      * Performs validation on the first and last names before saving.
      *
-     * @param int $id
-     * @param string $firstName
-     * @param string $lastName
+     * @param int $id The ID of the author to update.
+     * @param string $firstName The new first name of the author.
+     * @param string $lastName The new last name of the author.
      * @return void
      */
     public function updateAuthor(int $id, string $firstName, string $lastName): void
@@ -93,22 +100,18 @@ class AuthorService
         $lastName = trim($lastName);
 
         if (empty($firstName) || strlen($firstName) > 100 || empty($lastName) || strlen($lastName) > 100) {
-            // Ideally, we might want to signal a validation error differently here,
-            // perhaps by returning false or throwing an exception, as the controller
-            // for updating expects a void return type currently. For simplicity, we'll keep it void for now
-            // but the validation is performed.
             return;
         }
 
         $name = $firstName . ' ' . $lastName;
         $authorData = ['id' => $id, 'name' => $name, 'books' => $this->getAuthorById($id)['books'] ?? 0];
-        $this->authorRepository->save($authorData);
+        $this->authorRepository->update($authorData);
     }
 
     /**
      * Deletes an author by their ID.
      *
-     * @param int $id
+     * @param int $id The ID of the author to delete.
      * @return void
      */
     public function deleteAuthor(int $id): void

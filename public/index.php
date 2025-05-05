@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Main application entry point (Front Controller).
+ * Handles incoming requests and routes them to the appropriate controller action.
+ */
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use BookStore\Container\ServiceRegistry;

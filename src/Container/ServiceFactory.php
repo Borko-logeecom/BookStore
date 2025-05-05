@@ -7,12 +7,16 @@ use BookStore\Application\AuthorService;
 use BookStore\Infrastructure\Persistence\MySQL\MySQLAuthorRepository; // Update the namespace
 use PDO;
 
+/**
+ * Factory class responsible for creating instances of repositories, services, and controllers.
+ */
 class ServiceFactory
 {
     /**
-     * Create a MySQLAuthorRepository instance
+     * Creates a MySQLAuthorRepository instance.
+     * Establishes a database connection within this method.
      *
-     * @return MySQLAuthorRepository
+     * @return MySQLAuthorRepository The created AuthorRepository instance.
      */
     public function createAuthorRepository(): MySQLAuthorRepository // Rename the method
     {
@@ -32,9 +36,10 @@ class ServiceFactory
     }
 
     /**
-     * Create an AuthorService instance
+     * Creates an AuthorService instance.
+     * Injects the AuthorRepository dependency.
      *
-     * @return AuthorService
+     * @return AuthorService The created AuthorService instance.
      */
     public function createAuthorService(): AuthorService
     {
@@ -43,9 +48,10 @@ class ServiceFactory
     }
 
     /**
-     * Create an AuthorController instance
+     * Creates an AuthorController instance.
+     * Injects the AuthorService dependency.
      *
-     * @return AuthorController
+     * @return AuthorController The created AuthorController instance.
      */
     public function createAuthorController(): AuthorController
     {

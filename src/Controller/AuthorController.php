@@ -4,6 +4,9 @@ namespace BookStore\Controller;
 
 use BookStore\Application\AuthorService;
 
+/**
+ * Controller class for handling author-related user requests.
+ */
 class AuthorController
 {
     private AuthorService $authorService;
@@ -22,7 +25,7 @@ class AuthorController
 
     /**
      * Displays the list of authors.
-     * Redirects to the authors.phtml page.
+     * Fetches authors from the service and redirects to the authors list page.
      *
      * @return void
      */
@@ -37,8 +40,7 @@ class AuthorController
     }
 
     /**
-     * Displays the form for creating a new author.
-     *  Redirects to the authorCreate.phtml page.
+     * Redirects to the form for creating a new author.
      *
      * @return void
      */
@@ -49,10 +51,9 @@ class AuthorController
     }
 
     /**
-     * Displays the form for editing an existing author.
-     * Redirects to the authorEdit.phtml page, passing the author ID as a query parameter.
+     * Redirects to the form for editing an existing author, identified by ID.
      *
-     * @param int $id
+     * @param int $id The ID of the author to edit.
      * @return void
      */
     public function edit(int $id): void
@@ -63,8 +64,7 @@ class AuthorController
 
     /**
      * Handles the submission of the author creation form.
-     * Validates input and uses the AuthorService to create a new author.
-     * Sets session messages for success or failure and redirects accordingly.
+     * Validates input, creates the author via the service, and redirects.
      *
      * @return void
      */
@@ -93,10 +93,9 @@ class AuthorController
 
     /**
      * Handles the submission of the author editing form.
-     * Validates input and uses the AuthorService to update an existing author.
-     * Sets session messages for success or failure and redirects accordingly.
+     * Updates the author via the service and redirects.
      *
-     * @param int $id
+     * @param int $id The ID of the author being processed for edit.
      * @return void
      */
     public function processEdit(int $id): void
@@ -119,10 +118,9 @@ class AuthorController
 
     /**
      * Handles the deletion of an author.
-     * Uses the AuthorService to delete the author and sets a session message.
-     * Redirects back to the list of authors.
+     * Deletes the author via the service and redirects.
      *
-     * @param int $id
+     * @param int $id The ID of the author to delete.
      * @return void
      */
     public function delete(int $id): void
