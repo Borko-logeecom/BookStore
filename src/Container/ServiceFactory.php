@@ -5,7 +5,7 @@ namespace BookStore\Container;
 use BookStore\Controller\AuthorController;
 use BookStore\Application\AuthorService;
 use BookStore\Infrastructure\Persistence\MySQL\MySQLAuthorRepository; // Update the namespace
-use PDO;
+use BookStore\Infrastructure\Database\DatabaseConnection;
 
 /**
  * Factory class responsible for creating instances of repositories, services, and controllers.
@@ -14,23 +14,13 @@ class ServiceFactory
 {
     /**
      * Creates a MySQLAuthorRepository instance.
-     * Establishes a database connection within this method.
+     * Injects the database connection dependency into the repository.
      *
      * @return MySQLAuthorRepository The created AuthorRepository instance.
      */
     public function createAuthorRepository(): MySQLAuthorRepository // Rename the method
     {
-        $host = 'localhost'; // Adjust if your MySQL server is not on localhost
-        $dbname = 'bookstore_app';
-        $username = 'root'; // Adjust if you use a different user
-        $password = 'password'; // Enter the password for your MySQL root user (or another user)
-
-        try {
-            $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (\PDOException $e) {
-            die("Database connection failed: " . $e->getMessage());
-        }
+        $pdo = DatabaseConnection::getConnection();
 
         return new MySQLAuthorRepository($pdo);
     }

@@ -56,8 +56,8 @@ class AuthorService
         $firstName = trim($firstName);
         $lastName = trim($lastName);
 
-        if (empty($firstName) || strlen($firstName) > 100 || empty($lastName) || strlen($lastName) > 100) {
-            return null; // Validation failed
+        if (!$this->validateAuthorName($firstName, $lastName)) {
+            return null;
         }
 
         $name = $firstName . ' ' . $lastName;
@@ -65,6 +65,40 @@ class AuthorService
         $newAuthorId = $this->authorRepository->create($authorData);
 
         return $this->getAuthorById($newAuthorId);
+    }
+
+    /**
+     * Updates an existing author.
+     * Performs validation on the first and last names before saving.
+     *
+     * @param int $id The ID of the author to update.
+     * @param string $firstName The new first name of the author.
+     * @param string $lastName The new last name of the author.
+     * @return void
+     */
+    public function updateAuthor(int $id, string $firstName, string $lastName): void
+    {
+        $firstName = trim($firstName);
+        $lastName = trim($lastName);
+
+        if (!$this->validateAuthorName($firstName, $lastName)) {
+            return;
+        }
+
+        $name = $firstName . ' ' . $lastName;
+        $authorData = ['id' => $id, 'name' => $name, 'books' => $this->getAuthorById($id)['books'] ?? 0];
+        $this->authorRepository->update($authorData);
+    }
+
+    /**
+     * Deletes an author by their ID.
+     *
+     * @param int $id The ID of the author to delete.
+     * @return void
+     */
+    public function deleteAuthor(int $id): void
+    {
+        $this->authorRepository->delete($id);
     }
 
     /**
@@ -86,36 +120,21 @@ class AuthorService
     }
 
     /**
-     * Updates an existing author.
-     * Performs validation on the first and last names before saving.
+     * Validates the author's first and last names.
+     * Checks if names are not empty and not longer than 100 characters.
      *
-     * @param int $id The ID of the author to update.
-     * @param string $firstName The new first name of the author.
-     * @param string $lastName The new last name of the author.
-     * @return void
+     * @param string $firstName The first name to validate.
+     * @param string $lastName The last name to validate.
+     * @return bool True if validation passes, false otherwise.
      */
-    public function updateAuthor(int $id, string $firstName, string $lastName): void
+    private function validateAuthorName(string $firstName, string $lastName): bool
     {
         $firstName = trim($firstName);
         $lastName = trim($lastName);
-
         if (empty($firstName) || strlen($firstName) > 100 || empty($lastName) || strlen($lastName) > 100) {
-            return;
+            return false;
         }
 
-        $name = $firstName . ' ' . $lastName;
-        $authorData = ['id' => $id, 'name' => $name, 'books' => $this->getAuthorById($id)['books'] ?? 0];
-        $this->authorRepository->update($authorData);
-    }
-
-    /**
-     * Deletes an author by their ID.
-     *
-     * @param int $id The ID of the author to delete.
-     * @return void
-     */
-    public function deleteAuthor(int $id): void
-    {
-        $this->authorRepository->delete($id);
+        return true;
     }
 }

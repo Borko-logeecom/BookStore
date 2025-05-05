@@ -12,7 +12,6 @@ use BookStore\Container\ServiceRegistry;
 // Get the AuthorController from the ServiceRegistry
 $controller = ServiceRegistry::get('AuthorController');
 
-
 // Determine the requested action from GET or POST parameters
 $action = $_GET['action'] ?? $_POST['action'] ?? 'index'; // Default action is index (author list)
 

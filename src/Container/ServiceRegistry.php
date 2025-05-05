@@ -32,10 +32,22 @@ class ServiceRegistry
      */
     public static function get(string $name): ?object
     {
-        if (isset(self::$services[$name])) {
-            return self::$services[$name];
+        if (!isset(self::$services[$name])) {
+            self::initialize();
         }
 
+        return self::$services[$name] ?? null;
+    }
+
+    /**
+     * Initializes and registers the core service instances (repository, service, controller)
+     * using the ServiceFactory.
+     * This method is called once when the first service is requested and not yet registered.
+     *
+     * @return void
+     */
+    private static function initialize(): void
+    {
         $factory = new ServiceFactory();
 
         $authorRepository = $factory->createAuthorRepository();
@@ -46,7 +58,6 @@ class ServiceRegistry
 
         $authorController = $factory->createAuthorController();
         self::set('AuthorController', $authorController);
-
-        return self::$services[$name] ?? null;
     }
+
 }
