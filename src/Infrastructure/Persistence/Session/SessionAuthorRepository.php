@@ -2,11 +2,13 @@
 
 namespace BookStore\Infrastructure\Persistence\Session;
 
+use BookStore\Infrastructure\RepositoryInterfaces\AuthorRepositoryInterface;
+
 /**
  * Repository class for interacting with author data stored in PHP sessions.
  * NOTE: This repository is intended for legacy data handling and is being replaced by MySQL.
  */
-class SessionAuthorRepository
+class SessionAuthorRepository implements AuthorRepositoryInterface
 {
     /**
      * Retrieves all authors from the session.
@@ -38,29 +40,47 @@ class SessionAuthorRepository
     }
 
     /**
-     * Saves author data to the session. If the author data contains an 'id', it updates
-     * the existing author. Otherwise, it creates a new author with an auto-incrementing ID.
+     * Creates a new author in the session.
      *
-     * @param array $authorData Associative array containing author data (['id' => ..., 'name' => ..., 'books' => ...] or ['name' => ..., 'books' => ...]).
-     * @return void
+     * @param array $authorData Associative array containing author data (['name' => ..., 'books' => ...]).
+     * @return int The ID of the newly created author.
      */
-    public function save(array $authorData): void
+    public function create(array $authorData): int
     {
         if (!isset($_SESSION['author_id_counter'])) {
             $_SESSION['author_id_counter'] = 0;
         }
-        if (isset($authorData['id'])) {
-            $authorId = $authorData['id'];
-            foreach ($_SESSION['authors'] as $index => $author) {
-                if (isset($author['id']) && $author['id'] === $authorId) {
-                    $_SESSION['authors'][$index] = $authorData;
-                    break;
-                }
+
+        if (!isset($_SESSION['authors'])) {
+            $_SESSION['authors'] = [];
+        }
+
+        $_SESSION['author_id_counter']++;
+        $authorData['id'] = $_SESSION['author_id_counter'];
+        $_SESSION['authors'][] = $authorData;
+
+        return $authorData['id'];
+    }
+
+    /**
+     * Updates an existing author in the session.
+     *
+     * @param array $authorData Associative array containing author data (['id' => ..., 'name' => ..., 'books' => ...]).
+     * @return void
+     */
+    public function update(array $authorData): void
+    {
+
+        if (!isset($_SESSION['authors']) || !is_array($_SESSION['authors'])) {
+            return;
+        }
+
+        $authorId = $authorData['id'];
+        foreach ($_SESSION['authors'] as $index => $author) {
+            if (isset($author['id']) && $author['id'] === $authorId) {
+                $_SESSION['authors'][$index] = $authorData;
+                break;
             }
-        } else {
-            $_SESSION['author_id_counter']++;
-            $authorData['id'] = $_SESSION['author_id_counter'];
-            $_SESSION['authors'][] = $authorData;
         }
     }
 

@@ -6,23 +6,32 @@ use BookStore\Controller\AuthorController;
 use BookStore\Application\AuthorService;
 use BookStore\Infrastructure\Persistence\MySQL\MySQLAuthorRepository; // Update the namespace
 use BookStore\Infrastructure\Database\DatabaseConnection;
+use BookStore\Infrastructure\Persistence\Session\SessionAuthorRepository;
+use BookStore\Infrastructure\RepositoryInterfaces\AuthorRepositoryInterface;
 
 /**
  * Factory class responsible for creating instances of repositories, services, and controllers.
  */
 class ServiceFactory
 {
+    private const AUTHOR_REPOSITORY_TYPE = 'mysql';
+
     /**
      * Creates a MySQLAuthorRepository instance.
      * Injects the database connection dependency into the repository.
      *
-     * @return MySQLAuthorRepository The created AuthorRepository instance.
+     * @return AuthorRepositoryInterface  The created AuthorRepository instance.
      */
-    public function createAuthorRepository(): MySQLAuthorRepository // Rename the method
+    public function createAuthorRepository(): AuthorRepositoryInterface
     {
-        $pdo = DatabaseConnection::getConnection();
-
-        return new MySQLAuthorRepository($pdo);
+        if (self::AUTHOR_REPOSITORY_TYPE === 'mysql') {
+            $pdo = DatabaseConnection::getConnection();
+            return new MySQLAuthorRepository($pdo);
+        } elseif (self::AUTHOR_REPOSITORY_TYPE === 'session') {
+            return new SessionAuthorRepository();
+        } else {
+            throw new \InvalidArgumentException("Unknown author repository type: " . self::AUTHOR_REPOSITORY_TYPE);
+        }
     }
 
     /**

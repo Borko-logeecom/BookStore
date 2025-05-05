@@ -3,11 +3,12 @@
 namespace BookStore\Infrastructure\Persistence\MySQL;
 
 use PDO;
+use BookStore\Infrastructure\RepositoryInterfaces\AuthorRepositoryInterface;
 
 /**
  * Repository class for interacting with author data in a MySQL database.
  */
-class MySQLAuthorRepository
+class MySQLAuthorRepository implements AuthorRepositoryInterface
 {
     private PDO $pdo;
     private string $tableName = 'authors';

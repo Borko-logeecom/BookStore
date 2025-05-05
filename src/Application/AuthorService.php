@@ -3,21 +3,22 @@
 namespace BookStore\Application;
 
 use BookStore\Infrastructure\Persistence\MySQL\MySQLAuthorRepository;
+use BookStore\Infrastructure\RepositoryInterfaces\AuthorRepositoryInterface;
 
 /**
  * Service class for handling author-related business logic.
  */
 class AuthorService
 {
-    private MySQLAuthorRepository $authorRepository;
+    private AuthorRepositoryInterface $authorRepository;
 
     /**
      * Constructor.
      * Initializes the AuthorService with a MySQLAuthorRepository instance.
      *
-     * @param MySQLAuthorRepository $authorRepository The AuthorRepository dependency.
+     * @param AuthorRepositoryInterface $authorRepository The author repository instance.
      */
-    public function __construct(MySQLAuthorRepository $authorRepository)
+    public function __construct(AuthorRepositoryInterface $authorRepository)
     {
         $this->authorRepository = $authorRepository;
     }
