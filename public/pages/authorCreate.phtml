@@ -1,65 +1,57 @@
-<?php
-// PHP code can go here if needed before displaying the form
-?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Create Author</title>
 
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <title>Create Author</title>
+    <link rel="stylesheet" href="/public/css/authorCreate.css">
 
-        <link rel="stylesheet" href="../css/authorCreate.css">
+</head>
+<body>
+<div class="container">
+    <h2 style="text-align: left;">Author Create</h2>
+    <form action="/public/index.php?action=processCreate" method="post" onsubmit="return validateForm()">
+        <div class="form-group">
+            <label for="firstName">First name:</label>
+            <input type="text" id="firstName" name="firstName" maxlength="105" required
+                   oninvalid="this.nextElementSibling.style.display='block'"
+                   oninput="this.nextElementSibling.style.display='none'">
+            <p class="error-message">* This field is required</p>
+        </div>
+        <div class="form-group">
+            <label for="lastName">Last name:</label>
+            <input type="text" id="lastName" name="lastName" maxlength="105" required
+                   oninvalid="this.nextElementSibling.style.display='block'"
+                   oninput="this.nextElementSibling.style.display='none'">
+            <p class="error-message">* This field is required</p>
+        </div>
+        <button type="submit">Save</button>
 
-    </head>
-    <body>
-    <div class="container">
-        <h2 style="text-align: left;">Author Create</h2>
-        <form action="../index.php?action=processCreate" method="post" onsubmit="return validateForm()">
-            <div class="form-group">
-                <label for="firstName">First name:</label>
-                <input type="text" id="firstName" name="firstName" maxlength="105" required
-                       oninvalid="this.nextElementSibling.style.display='block'"
-                       oninput="this.nextElementSibling.style.display='none'">
-                <p class="error-message">* This field is required</p>
-            </div>
-            <div class="form-group">
-                <label for="lastName">Last name:</label>
-                <input type="text" id="lastName" name="lastName" maxlength="105" required
-                       oninvalid="this.nextElementSibling.style.display='block'"
-                       oninput="this.nextElementSibling.style.display='none'">
-                <p class="error-message">* This field is required</p>
-            </div>
-            <button type="submit">Save</button>
+        <script>
+            function validateForm() {
+                let valid = true;
+                const firstNameInput = document.getElementById('firstName');
+                const lastNameInput = document.getElementById('lastName');
+                const firstNameError = firstNameInput.nextElementSibling;
+                const lastNameError = lastNameInput.nextElementSibling;
 
-            <script>
-                function validateForm() {
-                    let valid = true;
-                    const firstNameInput = document.getElementById('firstName');
-                    const lastNameInput = document.getElementById('lastName');
-                    const firstNameError = firstNameInput.nextElementSibling;
-                    const lastNameError = lastNameInput.nextElementSibling;
-
-                    if (!firstNameInput.value.trim()) {
-                        firstNameError.style.display = 'block';
-                        valid = false;
-                    } else {
-                        firstNameError.style.display = 'none';
-                    }
-
-                    if (!lastNameInput.value.trim()) {
-                        lastNameError.style.display = 'block';
-                        valid = false;
-                    } else {
-                        lastNameError.style.display = 'none';
-                    }
-
-                    return valid;
+                if (!firstNameInput.value.trim()) {
+                    firstNameError.style.display = 'block';
+                    valid = false;
+                } else {
+                    firstNameError.style.display = 'none';
                 }
-            </script>
-        </form>
-    </div>
-    </body>
-    </html>
 
-<?php
-// PHP code can go here after displaying the form
-?>
+                if (!lastNameInput.value.trim()) {
+                    lastNameError.style.display = 'block';
+                    valid = false;
+                } else {
+                    lastNameError.style.display = 'none';
+                }
+
+                return valid;
+            }
+        </script>
+    </form>
+</div>
+</body>
+</html>

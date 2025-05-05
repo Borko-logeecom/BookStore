@@ -1,51 +1,15 @@
-<?php
-session_start();
-
-// Check if the author ID is passed
-if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-    die("Error: Missing or invalid author ID.");
-}
-
-$authorId = $_GET['id'];
-$authorToEdit = null;
-
-// Check if the authors array exists in the session
-if (isset($_SESSION['authors']) && is_array($_SESSION['authors'])) {
-    // Loop through the authors array to find the one with the matching ID
-    foreach ($_SESSION['authors'] as $author) {
-        if (isset($author['id']) && $author['id'] == $authorId) {
-            // Separate first and last names (assuming they are joined in 'name')
-            $nameParts = explode(' ', $author['name'], 2);
-            $authorToEdit = [
-                'id' => $author['id'],
-                'firstName' => $nameParts[0] ?? '',
-                'lastName' => $nameParts[1] ?? ''
-            ];
-            break; // Stop the loop when the author is found
-        }
-    }
-}
-
-// If the author does not exist in the session
-if (!$authorToEdit) {
-    die("Error: Author with ID " . htmlspecialchars($authorId) . " does not exist.");
-}
-
-$pageTitle = "Author Edit (" . htmlspecialchars($authorToEdit['id']) . ")";
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <title><?= $pageTitle ?></title>
 
-    <link rel="stylesheet" href="../css/authorEdit.css">
+    <link rel="stylesheet" href="/public/css/authorEdit.css">
 
 </head>
 <body>
 <div class="container">
     <h2 style="text-align: left;"><?= $pageTitle ?></h2>
-    <form action="../index.php?action=processEdit&id=<?= htmlspecialchars($authorToEdit['id']) ?>" method="post" onsubmit="return validateForm()">
+    <form action="/public/index.php?action=processEdit&id=<?= htmlspecialchars($authorToEdit['id']) ?>" method="post" onsubmit="return validateForm()">
         <input type="hidden" name="id" value="<?= htmlspecialchars($authorToEdit['id']) ?>">
         <div class="form-group">
             <label for="firstName">First name:</label>

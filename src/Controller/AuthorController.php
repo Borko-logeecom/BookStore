@@ -19,7 +19,6 @@ class AuthorController
      */
     public function __construct(AuthorService $authorService)
     {
-        session_start();
         $this->authorService = $authorService;
     }
 
@@ -33,10 +32,7 @@ class AuthorController
     {
         $authors = $this->authorService->getAllAuthors();
 
-        $_SESSION['authors'] = $authors;
-
-        header("Location: ../../public/pages/authors.phtml");
-        exit();
+        include __DIR__ . '/../../public/pages/authors.phtml';
     }
 
     /**
@@ -46,8 +42,7 @@ class AuthorController
      */
     public function create(): void
     {
-        header("Location: ../../public/pages/authorCreate.phtml");
-        exit();
+        include __DIR__ . '/../../public/pages/authorCreate.phtml';
     }
 
     /**
@@ -58,8 +53,19 @@ class AuthorController
      */
     public function edit(int $id): void
     {
-        header("Location: ../../public/pages/authorEdit.phtml?id=" . $id);
-        exit();
+        $authorToEdit = $this->authorService->getAuthorById($id);
+
+        if (!$authorToEdit) {
+            echo "Error: Author with ID " . htmlspecialchars($id) . " not found.";
+            exit();
+        }
+        $nameParts = explode(' ', $authorToEdit['name'] ?? '', 2);
+        $authorToEdit['firstName'] = $nameParts[0] ?? '';
+        $authorToEdit['lastName'] = $nameParts[1] ?? '';
+
+        $pageTitle = "Author Edit";
+
+        include __DIR__ . '/../../public/pages/authorEdit.phtml';
     }
 
     /**
@@ -71,7 +77,7 @@ class AuthorController
     public function processCreate(): void
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header("Location: ../../public/pages/authorCreate.phtml");
+            header("Location: /public/index.php?action=create");
             exit();
         }
 
@@ -81,12 +87,12 @@ class AuthorController
         $newAuthor = $this->authorService->createAuthor($firstName, $lastName);
 
         if ($newAuthor) {
-            $_SESSION['create_success'] = "Author " . htmlspecialchars($newAuthor['name']) . " has been successfully created.";
-            header("Location: ../../public/index.php?action=index");
+            $message = urlencode("Author " . htmlspecialchars($newAuthor['name']) . " has been successfully created.");
+            header("Location: /public/index.php?action=index&status=success&message=" . $message);
             exit();
         } else {
-            $_SESSION['create_error'] = "Error: Invalid input for author creation.";
-            header("Location: ../../public/pages/authorCreate.phtml");
+            $errorMessage = urlencode("Error: Invalid input for author creation. First/Last name might be empty or too long.");
+            header("Location: /public/index.php?action=create&status=error&message=" . $errorMessage); // Dodato &status=error&message=...
             exit();
         }
     }
@@ -101,7 +107,7 @@ class AuthorController
     public function processEdit(int $id): void
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header("Location: ../../public/pages/authors.phtml");
+            header("Location: /public/pages/authors.phtml");
             exit();
         }
 
@@ -111,8 +117,8 @@ class AuthorController
         // We are assuming that if the service method is called, the basic validation passed in the form.
         // A more robust solution might involve the service returning a status or throwing an exception.
         $this->authorService->updateAuthor($id, $firstName, $lastName);
-        $_SESSION['edit_success'] = "Author with ID " . $id . " has been successfully updated.";
-        header("Location: ../../public/index.php?action=index");
+        $message = urlencode("Author with ID " . htmlspecialchars($id) . " has been successfully updated.");
+        header("Location: /public/index.php?action=index&status=success&message=" . $message);
         exit();
     }
 
@@ -126,8 +132,8 @@ class AuthorController
     public function delete(int $id): void
     {
         $this->authorService->deleteAuthor($id);
-        $_SESSION['delete_message'] = "Author with ID " . $id . " has been successfully deleted.";
-        header("Location: ../../public/index.php?action=index");
+        $message = urlencode("Author with ID " . htmlspecialchars($id) . " has been successfully deleted.");
+        header("Location: /public/index.php?action=index&status=success&message=" . $message); // Dodato &status=success&message=...
         exit();
     }
 }

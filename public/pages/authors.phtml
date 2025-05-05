@@ -1,18 +1,9 @@
-<?php
-
-session_start();
-
-// Check if the authors array exists in the session
-$authors = isset($_SESSION['authors']) ? $_SESSION['authors'] : [];
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Author List</title>
 
-    <link rel="stylesheet" href="../css/authors.css">
+    <link rel="stylesheet" href="/public/css/authors.css">
 
 </head>
 
@@ -42,7 +33,7 @@ $authors = isset($_SESSION['authors']) ? $_SESSION['authors'] : [];
                     <span class="book-count"><?= $author['books'] ?></span>
                 </td>
                 <td class="actions" style="text-align: right;">
-                    <a href="../index.php?action=edit&id=<?= $author['id'] ?>">✏️</a>
+                    <a href="/public/index.php?action=edit&id=<?= $author['id'] ?>">✏️</a>
                     <a href="#"
                        onclick="confirmDelete(<?= $author['id'] ?>, '<?= htmlspecialchars($author['name']) ?>')">🗑️</a>
                 </td>
@@ -56,7 +47,7 @@ $authors = isset($_SESSION['authors']) ? $_SESSION['authors'] : [];
     </tbody>
 </table>
 
-<a class="create-btn" href="../index.php?action=create">+</a>
+<a class="create-btn" href="/public/index.php?action=create">+</a>
 
 <div id="deleteConfirmationModal"
      style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center;">
@@ -93,7 +84,7 @@ $authors = isset($_SESSION['authors']) ? $_SESSION['authors'] : [];
 
     function deleteAuthor() {
         const authorId = document.getElementById('authorIdToDelete').value;
-        window.location.href = '../index.php?action=delete&id=' + authorId;
+        window.location.href = '/public/index.php?action=delete&id=' + authorId;
     }
 </script>
 
