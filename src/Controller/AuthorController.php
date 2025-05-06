@@ -4,6 +4,7 @@ namespace BookStore\Controller;
 
 use BookStore\Application\AuthorService;
 use BookStore\Response\HtmlResponse;
+use BookStore\Response\RedirectResponse;
 
 /**
  * Controller class for handling author-related user requests.
@@ -94,15 +95,14 @@ class AuthorController
 
     /**
      * Handles the submission of the author creation form.
-     * Validates input, creates the author via the service, and redirects.
+     * Validates input, creates the author via the service, and returns a RedirectResponse.
      *
-     * @return void
+     * @return RedirectResponse An HTTP redirect response.
      */
-    public function processCreate(): void
+    public function processCreate(): RedirectResponse
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header("Location: /public/index.php?action=create");
-            exit();
+            return new RedirectResponse('/public/index.php?action=create', 303);
         }
 
         $firstName = $_POST['firstName'] ?? '';
@@ -112,12 +112,14 @@ class AuthorController
 
         if ($newAuthor) {
             $message = urlencode("Author " . htmlspecialchars($newAuthor['name']) . " has been successfully created.");
-            header("Location: /public/index.php?action=index&status=success&message=" . $message);
-            exit();
+            $redirectUrl = '/public/index.php?action=index&status=success&message=' . $message;
+
+            return new RedirectResponse($redirectUrl, 303);
         } else {
             $errorMessage = urlencode("Error: Invalid input for author creation. First/Last name might be empty or too long.");
-            header("Location: /public/index.php?action=create&status=error&message=" . $errorMessage);
-            exit();
+            $redirectUrl = '/public/index.php?action=create&status=error&message=' . $errorMessage;
+
+            return new RedirectResponse($redirectUrl, 303);
         }
     }
 
@@ -128,36 +130,36 @@ class AuthorController
      * @param int $id The ID of the author being processed for edit.
      * @return void
      */
-    public function processEdit(int $id): void
+    public function processEdit(int $id): RedirectResponse
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header("Location: /public/pages/authors.phtml");
-            exit();
+            return new RedirectResponse('/public/index.php?action=index', 303);
         }
 
         $firstName = $_POST['firstName'] ?? '';
         $lastName = $_POST['lastName'] ?? '';
 
-        // We are assuming that if the service method is called, the basic validation passed in the form.
-        // A more robust solution might involve the service returning a status or throwing an exception.
         $this->authorService->updateAuthor($id, $firstName, $lastName);
-        $message = urlencode("Author with ID " . htmlspecialchars($id) . " has been successfully updated.");
-        header("Location: /public/index.php?action=index&status=success&message=" . $message);
-        exit();
+
+        $message = urlencode("Author with ID " . htmlspecialchars((string)$id) . " has been successfully updated.");
+        $redirectUrl = '/public/index.php?action=index&status=success&message=' . $message;
+
+        return new RedirectResponse($redirectUrl, 303);
     }
 
     /**
      * Handles the deletion of an author.
-     * Deletes the author via the service and redirects.
+     * Deletes the author via the service and returns a RedirectResponse.
      *
      * @param int $id The ID of the author to delete.
-     * @return void
+     * @return RedirectResponse An HTTP redirect response.
      */
-    public function delete(int $id): void
+    public function delete(int $id): RedirectResponse
     {
         $this->authorService->deleteAuthor($id);
-        $message = urlencode("Author with ID " . htmlspecialchars($id) . " has been successfully deleted.");
-        header("Location: /public/index.php?action=index&status=success&message=" . $message);
-        exit();
+        $message = urlencode("Author with ID " . htmlspecialchars((string)$id) . " has been successfully deleted.");
+        $redirectUrl = '/public/index.php?action=index&status=success&message=' . $message;
+
+        return new RedirectResponse($redirectUrl, 303);
     }
 }
