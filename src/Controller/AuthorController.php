@@ -92,7 +92,7 @@ class AuthorController
             exit();
         } else {
             $errorMessage = urlencode("Error: Invalid input for author creation. First/Last name might be empty or too long.");
-            header("Location: /public/index.php?action=create&status=error&message=" . $errorMessage); // Dodato &status=error&message=...
+            header("Location: /public/index.php?action=create&status=error&message=" . $errorMessage);
             exit();
         }
     }
@@ -133,7 +133,7 @@ class AuthorController
     {
         $this->authorService->deleteAuthor($id);
         $message = urlencode("Author with ID " . htmlspecialchars($id) . " has been successfully deleted.");
-        header("Location: /public/index.php?action=index&status=success&message=" . $message); // Dodato &status=success&message=...
+        header("Location: /public/index.php?action=index&status=success&message=" . $message);
         exit();
     }
 }

@@ -1,5 +1,16 @@
 <?php
 
+require_once __DIR__ . '/../src/Container/ServiceFactory.php';
+
+
+use BookStore\Container\ServiceFactory;
+$repositoryType = ServiceFactory::getRepositoryType();
+
+
+if ($repositoryType === 'session') {
+    session_start();
+}
+
 /**
  * Main application entry point (Front Controller).
  * Handles incoming requests and routes them to the appropriate controller action.

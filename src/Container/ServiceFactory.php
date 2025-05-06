@@ -57,4 +57,15 @@ class ServiceFactory
         $authorService = $this->createAuthorService();
         return new AuthorController($authorService);
     }
+
+    /**
+     * Returns the configured author repository type.
+     *
+     * @return string The repository type ('mysql' or 'session').
+     */
+    public static function getRepositoryType(): string
+    {
+        return self::AUTHOR_REPOSITORY_TYPE;
+    }
+
 }
