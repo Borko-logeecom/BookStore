@@ -3,6 +3,7 @@
 namespace BookStore\Controller;
 
 use BookStore\Application\AuthorService;
+use BookStore\Response\HtmlResponse;
 
 /**
  * Controller class for handling author-related user requests.
@@ -24,40 +25,57 @@ class AuthorController
 
     /**
      * Displays the list of authors.
-     * Fetches authors from the service and redirects to the authors list page.
+     * Fetches authors from the service and returns an HtmlResponse.
      *
-     * @return void
+     * @return HtmlResponse The HTTP response containing the author list HTML.
      */
-    public function index(): void
+    public function index(): HtmlResponse
     {
         $authors = $this->authorService->getAllAuthors();
 
+        ob_start();
+
         include __DIR__ . '/../../public/pages/authors.phtml';
+
+        $html = ob_get_clean();
+
+        return new HtmlResponse($html);
     }
 
     /**
-     * Redirects to the form for creating a new author.
+     * Displays the form for creating a new author.
+     * Returns an HtmlResponse containing the form HTML.
      *
-     * @return void
+     * @return HtmlResponse The HTTP response containing the author creation form HTML.
      */
-    public function create(): void
+    public function create(): HtmlResponse
     {
+        ob_start();
+
         include __DIR__ . '/../../public/pages/authorCreate.phtml';
+
+        $html = ob_get_clean();
+
+        return new HtmlResponse($html);
     }
 
     /**
-     * Redirects to the form for editing an existing author, identified by ID.
+     * Displays the form for editing an existing author, identified by ID.
+     * Fetches author data from the service, prepares it for the view,
+     * and returns an HtmlResponse containing the form HTML or an error message.
      *
      * @param int $id The ID of the author to edit.
-     * @return void
+     * @return HtmlResponse The HTTP response containing the author edit form HTML or an error message.
      */
-    public function edit(int $id): void
+    public function edit(int $id): HtmlResponse
     {
         $authorToEdit = $this->authorService->getAuthorById($id);
 
         if (!$authorToEdit) {
-            echo "Error: Author with ID " . htmlspecialchars($id) . " not found.";
-            exit();
+            $errorMessage = "Error: Author with ID " . htmlspecialchars((string)$id) . " not found.";
+            $errorHtml = "<h1>Not Found</h1><p>" . $errorMessage . "</p><p><a href=\"/public/\">Go back to the author list</a></p>";
+
+            return new HtmlResponse($errorHtml, 404);
         }
         $nameParts = explode(' ', $authorToEdit['name'] ?? '', 2);
         $authorToEdit['firstName'] = $nameParts[0] ?? '';
@@ -65,7 +83,13 @@ class AuthorController
 
         $pageTitle = "Author Edit";
 
+        ob_start();
+
         include __DIR__ . '/../../public/pages/authorEdit.phtml';
+
+        $html = ob_get_clean();
+
+        return new HtmlResponse($html);
     }
 
     /**

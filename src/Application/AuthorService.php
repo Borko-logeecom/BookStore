@@ -2,7 +2,6 @@
 
 namespace BookStore\Application;
 
-use BookStore\Infrastructure\Persistence\MySQL\MySQLAuthorRepository;
 use BookStore\Infrastructure\RepositoryInterfaces\AuthorRepositoryInterface;
 
 /**
