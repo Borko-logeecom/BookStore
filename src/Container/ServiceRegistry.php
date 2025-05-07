@@ -58,6 +58,16 @@ class ServiceRegistry
 
         $authorController = $factory->createAuthorController();
         self::set('AuthorController', $authorController);
+
+        $bookRepository = $factory->createBookRepository();
+        self::set('bookRepository', $bookRepository);
+
+        $bookService = $factory->createBookService();
+        self::set('bookService', $bookService);
+
+        $bookController = $factory->createBookController();
+        self::set('BookController', $bookController);
+
     }
 
 }

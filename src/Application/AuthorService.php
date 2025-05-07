@@ -3,6 +3,9 @@
 namespace BookStore\Application;
 
 use BookStore\Infrastructure\RepositoryInterfaces\AuthorRepositoryInterface;
+use InvalidArgumentException;
+use RuntimeException;
+use BookStore\Application\BookService;
 
 /**
  * Service class for handling author-related business logic.
@@ -10,6 +13,7 @@ use BookStore\Infrastructure\RepositoryInterfaces\AuthorRepositoryInterface;
 class AuthorService
 {
     private AuthorRepositoryInterface $authorRepository;
+    private BookService $bookService;
 
     /**
      * Constructor.
@@ -17,9 +21,10 @@ class AuthorService
      *
      * @param AuthorRepositoryInterface $authorRepository The author repository instance.
      */
-    public function __construct(AuthorRepositoryInterface $authorRepository)
+    public function __construct(AuthorRepositoryInterface $authorRepository, BookService $bookService)
     {
         $this->authorRepository = $authorRepository;
+        $this->bookService = $bookService;
     }
 
     /**
@@ -92,13 +97,22 @@ class AuthorService
 
     /**
      * Deletes an author by their ID.
+     * Also deletes all books associated with the author.
      *
      * @param int $id The ID of the author to delete.
-     * @return void
+     * @return void // Changed back to void
+     * @throws RuntimeException If a repository error occurs.
      */
     public function deleteAuthor(int $id): void
     {
-        $this->authorRepository->delete($id);
+        try {
+            $this->bookService->deleteBooksByAuthorId($id);
+
+            $this->authorRepository->delete($id);
+
+        } catch (RuntimeException $e) {
+            throw $e;
+        }
     }
 
     /**

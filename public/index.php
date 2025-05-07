@@ -2,14 +2,15 @@
 
 require_once __DIR__ . '/../src/Container/ServiceFactory.php';
 
-
 use BookStore\Container\ServiceFactory;
 
-$repositoryType = ServiceFactory::getRepositoryType();
+$authorRepoType = ServiceFactory::getAuthorRepositoryType();
+$bookRepoType = ServiceFactory::getBookRepositoryType();
 
-
-if ($repositoryType === 'session') {
-    session_start();
+if ($authorRepoType === 'session' || $bookRepoType === 'session') {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
 }
 
 /**
