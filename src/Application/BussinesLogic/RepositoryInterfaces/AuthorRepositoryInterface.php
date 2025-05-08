@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BookStore\Infrastructure\RepositoryInterfaces;
+namespace BookStore\Application\BussinesLogic\RepositoryInterfaces;
 
 /**
  * Interface for Author Repositories.

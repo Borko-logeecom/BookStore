@@ -1,9 +1,9 @@
 <?php
 
-namespace BookStore\Infrastructure\Persistence\MySQL;
+namespace BookStore\Application\Persistence\MySQL;
 
+use BookStore\Application\BussinesLogic\RepositoryInterfaces\AuthorRepositoryInterface;
 use PDO;
-use BookStore\Infrastructure\RepositoryInterfaces\AuthorRepositoryInterface;
 
 /**
  * Repository class for interacting with author data in a MySQL database.
@@ -11,7 +11,7 @@ use BookStore\Infrastructure\RepositoryInterfaces\AuthorRepositoryInterface;
 class MySQLAuthorRepository implements AuthorRepositoryInterface
 {
     private PDO $pdo;
-    private string $tableName = 'authors';
+    private const TABLE_NAME = 'authors';
 
     /**
      * Constructor.
@@ -32,7 +32,7 @@ class MySQLAuthorRepository implements AuthorRepositoryInterface
      */
     public function getById(int $id): ?array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM {$this->tableName} WHERE id = :id");
+        $stmt = $this->pdo->prepare("SELECT * FROM {{self::TABLE_NAME}} WHERE id = :id");
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
 

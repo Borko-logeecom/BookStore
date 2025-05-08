@@ -1,19 +1,19 @@
 <?php
 
-namespace BookStore\Application;
+namespace BookStore\Application\BussinesLogic\Services;
 
-use BookStore\Infrastructure\RepositoryInterfaces\AuthorRepositoryInterface;
-use InvalidArgumentException;
+use BookStore\Application\BussinesLogic\RepositoryInterfaces\AuthorRepositoryInterface;
+use BookStore\Application\BussinesLogic\ServiceInterfaces\AuthorServiceInterface;
+use BookStore\Application\BussinesLogic\ServiceInterfaces\BookServiceInterface;
 use RuntimeException;
-use BookStore\Application\BookService;
 
 /**
  * Service class for handling author-related business logic.
  */
-class AuthorService
+class AuthorService implements AuthorServiceInterface
 {
     private AuthorRepositoryInterface $authorRepository;
-    private BookService $bookService;
+    private BookServiceInterface $bookService;
 
     /**
      * Constructor.
@@ -21,7 +21,7 @@ class AuthorService
      *
      * @param AuthorRepositoryInterface $authorRepository The author repository instance.
      */
-    public function __construct(AuthorRepositoryInterface $authorRepository, BookService $bookService)
+    public function __construct(AuthorRepositoryInterface $authorRepository, BookServiceInterface $bookService)
     {
         $this->authorRepository = $authorRepository;
         $this->bookService = $bookService;

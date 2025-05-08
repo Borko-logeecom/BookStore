@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BookStore\Response;
-
-use RuntimeException;
+namespace BookStore\Infrastructure\Response;
 
 /**
  * Represents an HTTP response containing JSON content.

@@ -1,26 +1,30 @@
 <?php
 
-namespace BookStore\Container;
+namespace BookStore\Infrastructure\Container;
 
 // Use statements for Author components
-use BookStore\Controller\AuthorController;
-use BookStore\Application\AuthorService;
-use BookStore\Infrastructure\Persistence\MySQL\MySQLAuthorRepository;
-use BookStore\Infrastructure\Persistence\Session\SessionAuthorRepository;
-use BookStore\Infrastructure\RepositoryInterfaces\AuthorRepositoryInterface;
+use BookStore\Application\BussinesLogic\RepositoryInterfaces\AuthorRepositoryInterface;
+use BookStore\Application\BussinesLogic\RepositoryInterfaces\BookRepositoryInterface;
+use BookStore\Application\BussinesLogic\ServiceInterfaces\AuthorServiceInterface;
+use BookStore\Application\BussinesLogic\ServiceInterfaces\BookServiceInterface;
+use BookStore\Application\BussinesLogic\Services\AuthorService;
+use BookStore\Application\BussinesLogic\Services\BookService;
+use BookStore\Application\Persistence\MySQL\MySQLAuthorRepository;
+use BookStore\Application\Persistence\MySQL\MySQLBookRepository;
+use BookStore\Application\Persistence\Session\SessionAuthorRepository;
+use BookStore\Application\Persistence\Session\SessionBookRepository;
+use BookStore\Application\Presentation\Controller\AuthorController;
+use BookStore\Application\Presentation\Controller\BookController;
+use BookStore\Infrastructure\Database\DatabaseConnection;
+use Exception;
+use InvalidArgumentException;
+use RuntimeException;
 
 // Use statement for Database connection
-use BookStore\Infrastructure\Database\DatabaseConnection;
 
 // Use statements for NEW Book components
-use BookStore\Infrastructure\RepositoryInterfaces\BookRepositoryInterface;
-use BookStore\Infrastructure\Persistence\MySQL\MySQLBookRepository;
-use BookStore\Infrastructure\Persistence\Session\SessionBookRepository;
-use BookStore\Application\BookService;
-use BookStore\Controller\BookController;
 
-use InvalidArgumentException; // Using for unknown repository type errors
-use RuntimeException;
+// Using for unknown repository type errors
 
 /**
  * Factory class responsible for creating instances of repositories, services, and controllers.
@@ -28,6 +32,35 @@ use RuntimeException;
  */
 class ServiceFactory
 {
+
+    /**
+     * Initializes and registers the core service instances (repository, service, controller)
+     * using the ServiceFactory.
+     * This method is called once when the first service is requested and not yet registered.
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
+    public static function init(): void
+    {
+
+        ServiceRegistry::set(
+            AuthorController::class,
+            new AuthorController(ServiceRegistry::get(AuthorServiceInterface::class))
+        );
+
+        ServiceRegistry::set(
+            AuthorServiceInterface::class,
+            new AuthorService(ServiceRegistry::get(AuthorRepositoryInterface::class), ServiceRegistry::get(BookServiceInterface::class))
+        );
+
+        ServiceRegistry::set(AuthorRepositoryInterface::class, new SessionAuthorRepository());
+
+
+
+    }
+
     // Configuration constants for repository types
     private const AUTHOR_REPOSITORY_TYPE = 'mysql';
     private const BOOK_REPOSITORY_TYPE = 'session';
@@ -80,6 +113,7 @@ class ServiceFactory
      * Injects dependencies if required (e.g., DatabaseConnection for MySQL).
      *
      * @return BookRepositoryInterface The created BookRepository instance.
+     *
      * @throws InvalidArgumentException If an unknown repository type is configured.
      * @throws RuntimeException If database connection fails for MySQL repository. // Added RuntimeException from DatabaseConnection
      */
@@ -153,5 +187,4 @@ class ServiceFactory
 
         return new BookController($bookService);
     }
-
 }

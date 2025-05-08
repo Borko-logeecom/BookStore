@@ -1,17 +1,19 @@
 <?php
 
-namespace BookStore\Controller;
+namespace BookStore\Application\Presentation\Controller;
 
-use BookStore\Application\AuthorService;
-use BookStore\Response\HtmlResponse;
-use BookStore\Response\RedirectResponse;
+use BookStore\Application\BussinesLogic\ServiceInterfaces\AuthorServiceInterface;
+use BookStore\Application\BussinesLogic\Services\AuthorService;
+use BookStore\Infrastructure\Response\HtmlResponse;
+use BookStore\Infrastructure\Response\RedirectResponse;
+use BookStore\Infrastructure\Response\Response;
 
 /**
  * Controller class for handling author-related user requests.
  */
 class AuthorController
 {
-    private AuthorService $authorService;
+    private AuthorServiceInterface $authorService;
 
     /**
      * Constructor.
@@ -19,7 +21,7 @@ class AuthorController
      *
      * @param AuthorService $authorService The AuthorService dependency.
      */
-    public function __construct(AuthorService $authorService)
+    public function __construct(AuthorServiceInterface $authorService)
     {
         $this->authorService = $authorService;
     }
@@ -66,9 +68,9 @@ class AuthorController
      * and returns an HtmlResponse containing the form HTML or an error message.
      *
      * @param int $id The ID of the author to edit.
-     * @return HtmlResponse The HTTP response containing the author edit form HTML or an error message.
+     * @return Response The HTTP response containing the author edit form HTML or an error message.
      */
-    public function edit(int $id): HtmlResponse
+    public function edit(int $id): Response
     {
         $authorToEdit = $this->authorService->getAuthorById($id);
 

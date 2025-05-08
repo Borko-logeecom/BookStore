@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace BookStore\Response;
+namespace BookStore\Infrastructure\Response;
 
-use RuntimeException; // Although not directly used in *this* class, it's thrown by parent methods.
+// Although not directly used in *this* class, it's thrown by parent methods.
 
 /**
  * Represents an HTTP response that redirects the client to a different URL.
@@ -21,6 +21,8 @@ class RedirectResponse extends Response
      */
     public function __construct(string $url, int $statusCode = 303, array $headers = [])
     {
+
+
         // Call the parent constructor (Response) to set the status code
         // Redirect status codes are typically in the 3xx range (e.g., 303)
         parent::__construct($statusCode);

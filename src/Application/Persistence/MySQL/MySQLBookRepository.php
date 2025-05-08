@@ -2,13 +2,15 @@
 
 declare(strict_types=1);
 
-namespace BookStore\Infrastructure\Persistence\MySQL;
+namespace BookStore\Application\Persistence\MySQL;
 
+use BookStore\Application\BussinesLogic\RepositoryInterfaces\BookRepositoryInterface;
 use BookStore\Infrastructure\Database\DatabaseConnection;
-use BookStore\Infrastructure\RepositoryInterfaces\BookRepositoryInterface;
 use PDO;
 use PDOException;
-use RuntimeException; // Using RuntimeException for database errors
+use RuntimeException;
+
+// Using RuntimeException for database errors
 
 /**
  * MySQL implementation of the BookRepositoryInterface.

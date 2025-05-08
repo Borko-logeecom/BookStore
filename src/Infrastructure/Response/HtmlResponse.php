@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BookStore\Response;
+namespace BookStore\Infrastructure\Response;
 
 /**
  * Represents an HTTP response containing HTML content.
@@ -18,19 +18,10 @@ class HtmlResponse extends Response
      */
     public function __construct(string $body, int $statusCode = 200, array $headers = [])
     {
-        parent::__construct($statusCode);
+        $this->headers[] = ['Content-Type' => 'text/html'];
+        parent::__construct($statusCode, $headers);
         $this->body = $body;
-        $this->addHeader('Content-Type', 'text/html; charset=UTF-8');
 
-        foreach ($headers as $name => $value) {
-            if (is_array($value)) {
-                foreach ($value as $v) {
-                    $this->addHeader($name, $v, false);
-                }
-            } else {
-                $this->addHeader($name, $value, true);
-            }
-        }
     }
 
     /**
@@ -42,8 +33,6 @@ class HtmlResponse extends Response
      */
     public function send(): void
     {
-        $this->sendStatusCode();
-        $this->sendHeaders();
         echo $this->body;
     }
 }
