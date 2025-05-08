@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace BookStore\Response;
+namespace BookStore\Infrastructure\Response;
 
-use RuntimeException; // Although not directly used in *this* class, it's thrown by parent methods.
+// Although not directly used in *this* class, it's thrown by parent methods.
 
 /**
  * Represents an HTTP response that redirects the client to a different URL.

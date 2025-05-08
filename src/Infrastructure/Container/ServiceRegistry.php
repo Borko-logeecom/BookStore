@@ -1,6 +1,6 @@
 <?php
 
-namespace BookStore\Container;
+namespace BookStore\Infrastructure\Container;
 
 /**
  * Simple registry acting as a basic Service Locator.

@@ -1,11 +1,9 @@
 <?php
 
-namespace BookStore\Application;
+namespace BookStore\Application\BussinesLogic\Services;
 
-use BookStore\Infrastructure\RepositoryInterfaces\AuthorRepositoryInterface;
-use InvalidArgumentException;
+use BookStore\Application\BussinesLogic\RepositoryInterfaces\AuthorRepositoryInterface;
 use RuntimeException;
-use BookStore\Application\BookService;
 
 /**
  * Service class for handling author-related business logic.

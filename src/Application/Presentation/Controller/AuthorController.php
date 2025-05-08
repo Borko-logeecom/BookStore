@@ -1,10 +1,10 @@
 <?php
 
-namespace BookStore\Controller;
+namespace BookStore\Application\Presentation\Controller;
 
-use BookStore\Application\AuthorService;
-use BookStore\Response\HtmlResponse;
-use BookStore\Response\RedirectResponse;
+use BookStore\Application\BussinesLogic\Services\AuthorService;
+use BookStore\Infrastructure\Response\HtmlResponse;
+use BookStore\Infrastructure\Response\RedirectResponse;
 
 /**
  * Controller class for handling author-related user requests.
@@ -36,7 +36,7 @@ class AuthorController
 
         ob_start();
 
-        include __DIR__ . '/../../public/pages/authors.phtml';
+        include __DIR__ . '/../../../../public/pages/authors.phtml';
 
         $html = ob_get_clean();
 
@@ -53,7 +53,7 @@ class AuthorController
     {
         ob_start();
 
-        include __DIR__ . '/../../public/pages/authorCreate.phtml';
+        include __DIR__ . '/../../../../public/pages/authorCreate.phtml';
 
         $html = ob_get_clean();
 
@@ -86,7 +86,7 @@ class AuthorController
 
         ob_start();
 
-        include __DIR__ . '/../../public/pages/authorEdit.phtml';
+        include __DIR__ . '/../../../../public/pages/authorEdit.phtml';
 
         $html = ob_get_clean();
 

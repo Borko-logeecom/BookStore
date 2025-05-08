@@ -1,9 +1,9 @@
 <?php
 
-namespace BookStore\Infrastructure\Persistence\MySQL;
+namespace BookStore\Application\Persistence\MySQL;
 
+use BookStore\Application\BussinesLogic\RepositoryInterfaces\AuthorRepositoryInterface;
 use PDO;
-use BookStore\Infrastructure\RepositoryInterfaces\AuthorRepositoryInterface;
 
 /**
  * Repository class for interacting with author data in a MySQL database.

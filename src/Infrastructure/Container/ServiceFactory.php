@@ -1,26 +1,27 @@
 <?php
 
-namespace BookStore\Container;
+namespace BookStore\Infrastructure\Container;
 
 // Use statements for Author components
-use BookStore\Controller\AuthorController;
-use BookStore\Application\AuthorService;
-use BookStore\Infrastructure\Persistence\MySQL\MySQLAuthorRepository;
-use BookStore\Infrastructure\Persistence\Session\SessionAuthorRepository;
-use BookStore\Infrastructure\RepositoryInterfaces\AuthorRepositoryInterface;
+use BookStore\Application\BussinesLogic\RepositoryInterfaces\AuthorRepositoryInterface;
+use BookStore\Application\BussinesLogic\RepositoryInterfaces\BookRepositoryInterface;
+use BookStore\Application\BussinesLogic\Services\AuthorService;
+use BookStore\Application\BussinesLogic\Services\BookService;
+use BookStore\Application\Persistence\MySQL\MySQLAuthorRepository;
+use BookStore\Application\Persistence\MySQL\MySQLBookRepository;
+use BookStore\Application\Persistence\Session\SessionAuthorRepository;
+use BookStore\Application\Persistence\Session\SessionBookRepository;
+use BookStore\Application\Presentation\Controller\AuthorController;
+use BookStore\Application\Presentation\Controller\BookController;
+use BookStore\Infrastructure\Database\DatabaseConnection;
+use InvalidArgumentException;
+use RuntimeException;
 
 // Use statement for Database connection
-use BookStore\Infrastructure\Database\DatabaseConnection;
 
 // Use statements for NEW Book components
-use BookStore\Infrastructure\RepositoryInterfaces\BookRepositoryInterface;
-use BookStore\Infrastructure\Persistence\MySQL\MySQLBookRepository;
-use BookStore\Infrastructure\Persistence\Session\SessionBookRepository;
-use BookStore\Application\BookService;
-use BookStore\Controller\BookController;
 
-use InvalidArgumentException; // Using for unknown repository type errors
-use RuntimeException;
+// Using for unknown repository type errors
 
 /**
  * Factory class responsible for creating instances of repositories, services, and controllers.

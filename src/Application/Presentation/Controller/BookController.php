@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace BookStore\Controller;
+namespace BookStore\Application\Presentation\Controller;
 
-use BookStore\Application\BookService;
-use BookStore\Response\JsonResponse;
+use BookStore\Application\BussinesLogic\Services\BookService;
+use BookStore\Infrastructure\Response\JsonResponse;
 use InvalidArgumentException;
 use RuntimeException;
 use Throwable;

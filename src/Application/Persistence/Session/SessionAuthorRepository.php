@@ -1,8 +1,8 @@
 <?php
 
-namespace BookStore\Infrastructure\Persistence\Session;
+namespace BookStore\Application\Persistence\Session;
 
-use BookStore\Infrastructure\RepositoryInterfaces\AuthorRepositoryInterface;
+use BookStore\Application\BussinesLogic\RepositoryInterfaces\AuthorRepositoryInterface;
 
 /**
  * Repository class for interacting with author data stored in PHP sessions.

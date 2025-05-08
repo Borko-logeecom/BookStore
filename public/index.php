@@ -1,8 +1,11 @@
 <?php
 
-require_once __DIR__ . '/../src/Container/ServiceFactory.php';
+require_once __DIR__ . '/../src/Infrastructure/Container/ServiceFactory.php';
 
-use BookStore\Container\ServiceFactory;
+use BookStore\Infrastructure\Container\ServiceFactory;
+use BookStore\Infrastructure\Container\ServiceRegistry;
+use BookStore\Infrastructure\Response\HtmlResponse;
+use BookStore\Infrastructure\Response\Response;
 
 $authorRepoType = ServiceFactory::getAuthorRepositoryType();
 $bookRepoType = ServiceFactory::getBookRepositoryType();
@@ -19,10 +22,6 @@ if ($authorRepoType === 'session' || $bookRepoType === 'session') {
  */
 
 require_once __DIR__ . '/../vendor/autoload.php';
-
-use BookStore\Container\ServiceRegistry;
-use BookStore\Response\Response;
-use BookStore\Response\HtmlResponse;
 
 // Get the AuthorController from the ServiceRegistry
 $controller = ServiceRegistry::get('AuthorController');
