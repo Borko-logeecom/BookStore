@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BookStore\Application\BussinesLogic\RepositoryInterfaces;
+namespace BookStore\Infrastructure\RepositoryInterfaces;
 
 /**
  * Interface for accessing and managing Book data in a data store.

@@ -1,9 +1,8 @@
 <?php
 
-namespace BookStore\Application\Persistence\Session;
+namespace BookStore\Infrastructure\Persistence\Session;
 
-use BookStore\Application\BussinesLogic\RepositoryInterfaces\AuthorRepositoryInterface;
-use BookStore\Infrastructure\Session\SessionHandler;
+use BookStore\Infrastructure\RepositoryInterfaces\AuthorRepositoryInterface;
 
 /**
  * Repository class for interacting with author data stored in PHP sessions.
@@ -18,7 +17,7 @@ class SessionAuthorRepository implements AuthorRepositoryInterface
      */
     public function getAll(): array
     {
-        return SessionHandler::getInstance()->get('authors') ?? [];
+        return $_SESSION['authors'] ?? [];
     }
 
     /**

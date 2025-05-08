@@ -1,6 +1,6 @@
 <?php
 
-namespace BookStore\Infrastructure\Container;
+namespace BookStore\Container;
 
 /**
  * Simple registry acting as a basic Service Locator.
@@ -33,14 +33,19 @@ class ServiceRegistry
     public static function get(string $name): ?object
     {
         if (!isset(self::$services[$name])) {
-            throw new \Exception('Service: '  . $name . ' not found');
-
+            self::initialize();
         }
 
-        return self::$services[$name];
+        return self::$services[$name] ?? null;
     }
 
-
+    /**
+     * Initializes and registers the core service instances (repository, service, controller)
+     * using the ServiceFactory.
+     * This method is called once when the first service is requested and not yet registered.
+     *
+     * @return void
+     */
     private static function initialize(): void
     {
         $factory = new ServiceFactory();

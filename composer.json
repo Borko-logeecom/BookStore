@@ -1,18 +1,17 @@
 {
-  "name": "borko/book-store",
-  "autoload": {
-    "psr-4": {
-      "BookStore\\": "src/"
+    "name": "borko/book-store",
+    "autoload": {
+        "psr-4": {
+            "BookStore\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Borko Stojanović",
+            "email": "borko.stojanovic@logeecom.com"
+        }
+    ],
+    "require": {
+      "ext-pdo": "*"
     }
-  },
-  "authors": [
-    {
-      "name": "Borko Stojanović",
-      "email": "borko.stojanovic@logeecom.com"
-    }
-  ],
-  "require": {
-    "ext-pdo": "*",
-    "php": ">=8.2"
-  }
 }

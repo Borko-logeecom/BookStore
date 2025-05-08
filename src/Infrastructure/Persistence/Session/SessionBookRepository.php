@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace BookStore\Application\Persistence\Session;
+namespace BookStore\Infrastructure\Persistence\Session;
 
-use BookStore\Application\BussinesLogic\RepositoryInterfaces\BookRepositoryInterface;
+use BookStore\Infrastructure\RepositoryInterfaces\BookRepositoryInterface;
 use RuntimeException;
 
 /**
