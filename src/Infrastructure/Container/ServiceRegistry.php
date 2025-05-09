@@ -28,46 +28,20 @@ class ServiceRegistry
      * using the ServiceFactory before attempting to retrieve the requested service.
      *
      * @param string $name The name of the service to retrieve.
+     *
      * @return object|null The service instance if found, null otherwise.
+     *
+     * @throws \Exception
      */
+
     public static function get(string $name): ?object
     {
         if (!isset(self::$services[$name])) {
-            self::initialize();
+            throw new \Exception('Service: '  . $name . ' not found');
+
         }
 
         return self::$services[$name] ?? null;
-    }
-
-    /**
-     * Initializes and registers the core service instances (repository, service, controller)
-     * using the ServiceFactory.
-     * This method is called once when the first service is requested and not yet registered.
-     *
-     * @return void
-     */
-    private static function initialize(): void
-    {
-        $factory = new ServiceFactory();
-
-        $authorRepository = $factory->createAuthorRepository();
-        self::set('authorRepository', $authorRepository);
-
-        $authorService = $factory->createAuthorService();
-        self::set('authorService', $authorService);
-
-        $authorController = $factory->createAuthorController();
-        self::set('AuthorController', $authorController);
-
-        $bookRepository = $factory->createBookRepository();
-        self::set('bookRepository', $bookRepository);
-
-        $bookService = $factory->createBookService();
-        self::set('bookService', $bookService);
-
-        $bookController = $factory->createBookController();
-        self::set('BookController', $bookController);
-
     }
 
 }

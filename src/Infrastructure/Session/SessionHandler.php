@@ -28,6 +28,11 @@ class SessionHandler
         return self::$instance;
     }
 
+    public function has(string $key): bool
+    {
+        return isset($_SESSION[$key]);
+    }
+
     /**
      * @param string $key
      *

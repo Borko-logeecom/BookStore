@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BookStore\Application\BussinesLogic\Services;
 
 use BookStore\Application\BussinesLogic\RepositoryInterfaces\BookRepositoryInterface;
+use BookStore\Application\BussinesLogic\ServiceInterfaces\BookServiceInterface;
 use InvalidArgumentException;
 use RuntimeException;
 
@@ -15,7 +16,7 @@ use RuntimeException;
  * Service class for handling book-related business logic.
  * Depends on a BookRepositoryInterface implementation.
  */
-class BookService
+class BookService implements BookServiceInterface
 {
     private BookRepositoryInterface $bookRepository;
 

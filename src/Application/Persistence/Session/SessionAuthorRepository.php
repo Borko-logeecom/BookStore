@@ -3,6 +3,7 @@
 namespace BookStore\Application\Persistence\Session;
 
 use BookStore\Application\BussinesLogic\RepositoryInterfaces\AuthorRepositoryInterface;
+use BookStore\Infrastructure\Session\SessionHandler;
 
 /**
  * Repository class for interacting with author data stored in PHP sessions.
@@ -17,7 +18,7 @@ class SessionAuthorRepository implements AuthorRepositoryInterface
      */
     public function getAll(): array
     {
-        return $_SESSION['authors'] ?? [];
+        return SessionHandler::getInstance()->get('authors') ?? [];
     }
 
     /**
@@ -28,15 +29,7 @@ class SessionAuthorRepository implements AuthorRepositoryInterface
      */
     public function getById(int $id): ?array
     {
-        if (!isset($_SESSION['authors']) || !is_array($_SESSION['authors'])) {
-            return null;
-        }
-        foreach ($_SESSION['authors'] as $author) {
-            if (isset($author['id']) && $author['id'] === $id) {
-                return $author;
-            }
-        }
-        return null;
+        return SessionHandler::getInstance()->get('authors')[$id] ?? null;
     }
 
     /**
@@ -47,15 +40,17 @@ class SessionAuthorRepository implements AuthorRepositoryInterface
      */
     public function create(array $authorData): int
     {
-        if (!isset($_SESSION['author_id_counter'])) {
-            $_SESSION['author_id_counter'] = 0;
+        if (!SessionHandler::getInstance()->has('author_id_counter')) {
+            SessionHandler::getInstance()->set('author_id_counter', 0);
         }
 
-        if (!isset($_SESSION['authors'])) {
-            $_SESSION['authors'] = [];
+        if (!SessionHandler::getInstance()->has('authors')) {
+            SessionHandler::getInstance()->set('authors', []);
         }
 
-        $_SESSION['author_id_counter']++;
+        $currentIDCounter = SessionHandler::getInstance()->get('author_id_counter');
+        SessionHandler::getInstance()->set('author_id_counter', $currentIDCounter + 1);
+
         $authorData['id'] = $_SESSION['author_id_counter'];
         $_SESSION['authors'][] = $authorData;
 

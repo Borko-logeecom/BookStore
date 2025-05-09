@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BookStore\Application\Presentation\Controller;
 
+use BookStore\Application\BussinesLogic\ServiceInterfaces\BookServiceInterface;
 use BookStore\Application\BussinesLogic\Services\BookService;
 use BookStore\Infrastructure\Response\JsonResponse;
 use InvalidArgumentException;
@@ -18,15 +19,15 @@ use Throwable;
  */
 class BookController
 {
-    private BookService $bookService;
+    private BookServiceInterface $bookService;
 
     /**
      * Constructor.
      * Injects the BookService dependency required by this controller.
      *
-     * @param BookService $bookService The BookService instance provided by the Factory.
+     * @param BookServiceInterface $bookService The BookService instance provided by the Factory.
      */
-    public function __construct(BookService $bookService)
+    public function __construct(BookServiceInterface $bookService)
     {
         $this->bookService = $bookService;
     }

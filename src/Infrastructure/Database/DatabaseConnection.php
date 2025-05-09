@@ -12,6 +12,21 @@ use PDO;
  */
 class DatabaseConnection
 {
+
+    private static ?DatabaseConnection $instance = null;
+
+    /**
+     * @return DatabaseConnection
+     */
+    public static function getInstance(): DatabaseConnection
+    {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
     /**
      * Establishes and returns a PDO database connection instance.
      *

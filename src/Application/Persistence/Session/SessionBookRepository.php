@@ -17,27 +17,6 @@ class SessionBookRepository implements BookRepositoryInterface
     private const SESSION_KEY_NEXT_ID = 'next_book_id';
 
     /**
-     * Constructor.
-     * Ensures the necessary session keys are initialized.
-     */
-    public function __construct()
-    {
-        if (session_status() === PHP_SESSION_NONE) {
-            throw new RuntimeException("Session is not started. SessionBookRepository requires an active session.");
-        }
-
-        // Initialize the session storage for books if it doesn't exist
-        if (!isset($_SESSION[self::SESSION_KEY_BOOKS]) || !is_array($_SESSION[self::SESSION_KEY_BOOKS])) {
-            $_SESSION[self::SESSION_KEY_BOOKS] = [];
-        }
-
-        // Initialize the ID counter if it doesn't exist
-        if (!isset($_SESSION[self::SESSION_KEY_NEXT_ID]) || !is_int($_SESSION[self::SESSION_KEY_NEXT_ID])) {
-            $_SESSION[self::SESSION_KEY_NEXT_ID] = 1;
-        }
-    }
-
-    /**
      * Finds all books belonging to a specific author from the session.
      *
      * @param int $authorId The ID of the author.

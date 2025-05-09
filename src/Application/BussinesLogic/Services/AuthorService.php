@@ -3,12 +3,13 @@
 namespace BookStore\Application\BussinesLogic\Services;
 
 use BookStore\Application\BussinesLogic\RepositoryInterfaces\AuthorRepositoryInterface;
+use BookStore\Application\BussinesLogic\ServiceInterfaces\AuthorServiceInterface;
 use RuntimeException;
 
 /**
  * Service class for handling author-related business logic.
  */
-class AuthorService
+class AuthorService implements AuthorServiceInterface
 {
     private AuthorRepositoryInterface $authorRepository;
     private BookService $bookService;

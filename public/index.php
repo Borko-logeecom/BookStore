@@ -2,29 +2,25 @@
 
 require_once __DIR__ . '/../src/Infrastructure/Container/ServiceFactory.php';
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use BookStore\Application\Presentation\Controller\AuthorController;
 use BookStore\Infrastructure\Container\ServiceFactory;
 use BookStore\Infrastructure\Container\ServiceRegistry;
 use BookStore\Infrastructure\Response\HtmlResponse;
 use BookStore\Infrastructure\Response\Response;
 
-$authorRepoType = ServiceFactory::getAuthorRepositoryType();
-$bookRepoType = ServiceFactory::getBookRepositoryType();
-
-if ($authorRepoType === 'session' || $bookRepoType === 'session') {
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
-}
-
 /**
  * Main application entry point (Front Controller).
  * Handles incoming requests and routes them to the appropriate controller action.
  */
-
-require_once __DIR__ . '/../vendor/autoload.php';
-
 // Get the AuthorController from the ServiceRegistry
-$controller = ServiceRegistry::get('AuthorController');
+try {
+    ServiceFactory::init();
+    $controller = ServiceRegistry::get(AuthorController::class);
+}catch (Throwable $exception){
+    $u=1;
+}
 
 // Determine the requested action from GET or POST parameters
 $action = $_GET['action'] ?? $_POST['action'] ?? 'index'; // Default action is index (author list)

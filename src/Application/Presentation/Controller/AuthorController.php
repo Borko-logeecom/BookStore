@@ -2,6 +2,7 @@
 
 namespace BookStore\Application\Presentation\Controller;
 
+use BookStore\Application\BussinesLogic\ServiceInterfaces\AuthorServiceInterface;
 use BookStore\Application\BussinesLogic\Services\AuthorService;
 use BookStore\Infrastructure\Response\HtmlResponse;
 use BookStore\Infrastructure\Response\RedirectResponse;
@@ -11,15 +12,15 @@ use BookStore\Infrastructure\Response\RedirectResponse;
  */
 class AuthorController
 {
-    private AuthorService $authorService;
+    private AuthorServiceInterface $authorService;
 
     /**
      * Constructor.
      * Initializes the AuthorController with an AuthorService instance.
      *
-     * @param AuthorService $authorService The AuthorService dependency.
+     * @param AuthorServiceInterface $authorService The AuthorService dependency.
      */
-    public function __construct(AuthorService $authorService)
+    public function __construct(AuthorServiceInterface $authorService)
     {
         $this->authorService = $authorService;
     }

@@ -5,6 +5,8 @@ namespace BookStore\Infrastructure\Container;
 // Use statements for Author components
 use BookStore\Application\BussinesLogic\RepositoryInterfaces\AuthorRepositoryInterface;
 use BookStore\Application\BussinesLogic\RepositoryInterfaces\BookRepositoryInterface;
+use BookStore\Application\BussinesLogic\ServiceInterfaces\AuthorServiceInterface;
+use BookStore\Application\BussinesLogic\ServiceInterfaces\BookServiceInterface;
 use BookStore\Application\BussinesLogic\Services\AuthorService;
 use BookStore\Application\BussinesLogic\Services\BookService;
 use BookStore\Application\Persistence\MySQL\MySQLAuthorRepository;
@@ -14,6 +16,7 @@ use BookStore\Application\Persistence\Session\SessionBookRepository;
 use BookStore\Application\Presentation\Controller\AuthorController;
 use BookStore\Application\Presentation\Controller\BookController;
 use BookStore\Infrastructure\Database\DatabaseConnection;
+use Exception;
 use InvalidArgumentException;
 use RuntimeException;
 
@@ -29,130 +32,62 @@ use RuntimeException;
  */
 class ServiceFactory
 {
-    // Configuration constants for repository types
-    private const AUTHOR_REPOSITORY_TYPE = 'mysql';
-    private const BOOK_REPOSITORY_TYPE = 'session';
-
     /**
-     * Returns the configured author repository type.
-     *
-     * @return string The repository type ('mysql' or 'session').
+     * @throws Exception
      */
-    public static function getAuthorRepositoryType(): string
+    public static function init(): void
     {
-        return self::AUTHOR_REPOSITORY_TYPE;
-    }
 
-    /**
-     * Returns the configured book repository type.
-     *
-     * @return string The repository type ('mysql' or 'session').
-     */
-    public static function getBookRepositoryType(): string
-    {
-        return self::BOOK_REPOSITORY_TYPE;
-    }
+        //Author bootstrap
+/*
+        ServiceRegistry::set(
+            AuthorRepositoryInterface::class,
+            new SessionAuthorRepository());
+*/
+        ServiceRegistry::set(
+            AuthorRepositoryInterface::class,
+            new MySQLAuthorRepository());
 
+        ServiceRegistry::set(
+            BookRepositoryInterface::class,
+            new SessionBookRepository());
 
-    /**
-     * Creates an AuthorRepository instance based on configuration.
-     * Injects dependencies if required (e.g., DatabaseConnection for MySQL).
-     *
-     * @return AuthorRepositoryInterface The created AuthorRepository instance.
-     * @throws InvalidArgumentException If an unknown repository type is configured.
-     * @throws RuntimeException If database connection fails for MySQL repository. // Added RuntimeException from DatabaseConnection
-     */
-    public function createAuthorRepository(): AuthorRepositoryInterface
-    {
-        $repositoryType = self::getAuthorRepositoryType();
+        ServiceRegistry::set(
+            BookServiceInterface::class,
+            new BookService(ServiceRegistry::get(BookRepositoryInterface::class))
+        );
 
-        if ($repositoryType === 'mysql') {
-            $dbConnection = DatabaseConnection::getConnection();
-            return new MySQLAuthorRepository($dbConnection);
-        } elseif ($repositoryType === 'session') {
-            return new SessionAuthorRepository();
-        } else {
-            throw new InvalidArgumentException("Unknown author repository type configured: " . $repositoryType);
-        }
-    }
+        ServiceRegistry::set(
+            AuthorServiceInterface::class,
+            new AuthorService(
+                ServiceRegistry::get(AuthorRepositoryInterface::class),
+                ServiceRegistry::get(BookServiceInterface::class)
+            )
+        );
 
-    /**
-     * Creates a BookRepository instance based on configuration.
-     * Injects dependencies if required (e.g., DatabaseConnection for MySQL).
-     *
-     * @return BookRepositoryInterface The created BookRepository instance.
-     * @throws InvalidArgumentException If an unknown repository type is configured.
-     * @throws RuntimeException If database connection fails for MySQL repository. // Added RuntimeException from DatabaseConnection
-     */
-    public function createBookRepository(): BookRepositoryInterface
-    {
-        // Use the new static getter method
-        $repositoryType = self::getBookRepositoryType();
+        ServiceRegistry::set(
+            AuthorController::class,
+            new AuthorController(ServiceRegistry::get(AuthorServiceInterface::class))
+        );
 
-        if ($repositoryType === 'mysql') {
-            $dbConnection = DatabaseConnection::getConnection();
-            return new MySQLBookRepository($dbConnection);
-        } elseif ($repositoryType === 'session') {
-            return new SessionBookRepository();
-        } else {
-            throw new InvalidArgumentException("Unknown book repository type configured: " . $repositoryType);
-        }
-    }
+        //Book bootstrap
 
-    /**
-     * Creates an AuthorService instance.
-     * Injects AuthorRepository and BookService dependencies.
-     *
-     * @return AuthorService The created AuthorService instance.
-     */
-    public function createAuthorService(): AuthorService
-    {
-        $authorRepository = $this->createAuthorRepository();
+        ServiceRegistry::set(
+            BookRepositoryInterface::class,
+            new SessionBookRepository()
+        );
 
-        $bookService = $this->createBookService();
+        ServiceRegistry::set(
+            BookServiceInterface::class,
+            new BookService(ServiceRegistry::get(BookRepositoryInterface::class))
+        );
 
-        return new AuthorService($authorRepository, $bookService);
-    }
-
-    /**
-     * Creates a BookService instance.
-     * Injects the BookRepository dependency.
-     *
-     * @return BookService The created BookService instance.
-     */
-    public function createBookService(): BookService
-    {
-        $bookRepository = $this->createBookRepository();
-
-        return new BookService($bookRepository);
-    }
+        ServiceRegistry::set(
+            BookController::class,
+            new BookController(ServiceRegistry::get(BookServiceInterface::class))
+        );
 
 
-    /**
-     * Creates an AuthorController instance.
-     * Injects the AuthorService dependency.
-     * Note: AuthorController now indirectly depends on BookService via AuthorService.
-     *
-     * @return AuthorController The created AuthorController instance.
-     */
-    public function createAuthorController(): AuthorController
-    {
-        $authorService = $this->createAuthorService();
-
-        return new AuthorController($authorService);
-    }
-
-    /**
-     * Creates a BookController instance.
-     * Injects the BookService dependency into the BookController constructor.
-     *
-     * @return BookController The created BookController instance.
-     */
-    public function createBookController(): BookController
-    {
-        $bookService = $this->createBookService();
-
-        return new BookController($bookService);
     }
 
 }
