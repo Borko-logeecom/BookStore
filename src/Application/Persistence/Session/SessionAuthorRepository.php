@@ -11,6 +11,13 @@ use BookStore\Infrastructure\Session\SessionHandler;
  */
 class SessionAuthorRepository implements AuthorRepositoryInterface
 {
+    private SessionHandler $sessionHandler;
+
+    public function __construct()
+    {
+        $this->sessionHandler = SessionHandler::getInstance();
+    }
+
     /**
      * Retrieves all authors from the session.
      *
@@ -18,7 +25,7 @@ class SessionAuthorRepository implements AuthorRepositoryInterface
      */
     public function getAll(): array
     {
-        return SessionHandler::getInstance()->get('authors') ?? [];
+        return $this->sessionHandler->get('authors') ?? [];
     }
 
     /**
@@ -29,7 +36,13 @@ class SessionAuthorRepository implements AuthorRepositoryInterface
      */
     public function getById(int $id): ?array
     {
-        return SessionHandler::getInstance()->get('authors')[$id] ?? null;
+        $authors = $this->sessionHandler->get('authors') ?? [];
+        foreach ($authors as $author) {
+            if (isset($author['id']) && $author['id'] === $id) {
+                return $author;
+            }
+        }
+        return null;
     }
 
     /**
@@ -40,19 +53,16 @@ class SessionAuthorRepository implements AuthorRepositoryInterface
      */
     public function create(array $authorData): int
     {
-        if (!SessionHandler::getInstance()->has('author_id_counter')) {
-            SessionHandler::getInstance()->set('author_id_counter', 0);
-        }
+        $authorIdCounter = $this->sessionHandler->get('author_id_counter') ?? 0;
+        $authors = $this->sessionHandler->get('authors') ?? [];
 
-        if (!SessionHandler::getInstance()->has('authors')) {
-            SessionHandler::getInstance()->set('authors', []);
-        }
+        $authorIdCounter++;
+        $authorData['id'] = $authorIdCounter;
 
-        $currentIDCounter = SessionHandler::getInstance()->get('author_id_counter');
-        SessionHandler::getInstance()->set('author_id_counter', $currentIDCounter + 1);
+        $authors[] = $authorData;
 
-        $authorData['id'] = $_SESSION['author_id_counter'];
-        $_SESSION['authors'][] = $authorData;
+        $this->sessionHandler->set('author_id_counter', $authorIdCounter);
+        $this->sessionHandler->set('authors', $authors);
 
         return $authorData['id'];
     }
@@ -65,18 +75,14 @@ class SessionAuthorRepository implements AuthorRepositoryInterface
      */
     public function update(array $authorData): void
     {
-
-        if (!isset($_SESSION['authors']) || !is_array($_SESSION['authors'])) {
-            return;
-        }
-
-        $authorId = $authorData['id'];
-        foreach ($_SESSION['authors'] as $index => $author) {
-            if (isset($author['id']) && $author['id'] === $authorId) {
-                $_SESSION['authors'][$index] = $authorData;
+        $authors = $this->sessionHandler->get('authors') ?? [];
+        foreach ($authors as $index => $author) {
+            if (isset($author['id']) && $author['id'] === $authorData['id']) {
+                $authors[$index] = $authorData;
                 break;
             }
         }
+        $this->sessionHandler->set('authors', $authors);
     }
 
     /**
@@ -87,19 +93,15 @@ class SessionAuthorRepository implements AuthorRepositoryInterface
      */
     public function delete(int $id): void
     {
-        if (!isset($_SESSION['authors']) || !is_array($_SESSION['authors'])) {
-            return;
-        }
-        $authorIndexToDelete = -1;
-        foreach ($_SESSION['authors'] as $index => $author) {
+        $authors = $this->sessionHandler->get('authors') ?? [];
+
+        foreach ($authors as $index => $author) {
             if (isset($author['id']) && $author['id'] === $id) {
-                $authorIndexToDelete = $index;
+                unset($authors[$index]);
                 break;
             }
         }
-        if ($authorIndexToDelete !== -1) {
-            unset($_SESSION['authors'][$authorIndexToDelete]);
-            $_SESSION['authors'] = array_values($_SESSION['authors']);
-        }
+
+        $this->sessionHandler->set('authors', array_values($authors));
     }
 }

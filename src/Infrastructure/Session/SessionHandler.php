@@ -54,4 +54,11 @@ class SessionHandler
         $_SESSION[$key] = $value;
     }
 
+    public function destroy(): void
+    {
+        session_unset();
+        session_destroy();
+        self::$instance = null;
+    }
+
 }
