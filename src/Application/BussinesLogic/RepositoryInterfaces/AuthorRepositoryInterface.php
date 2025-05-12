@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace BookStore\Application\BussinesLogic\RepositoryInterfaces;
 
+use BookStore\Application\BussinesLogic\Model\Author\Author;
+
 /**
  * Interface for Author Repositories.
  * Defines the contract for any class acting as an Author Repository.
@@ -26,20 +28,16 @@ interface AuthorRepositoryInterface
     public function getById(int $id): ?array;
 
     /**
-     * Creates a new author in the repository.
-     *
-     * @param array $authorData Associative array containing author data (['name' => ..., 'books' => ...]).
-     * @return int The ID of the newly created author.
+     * @param Author $author
+     * @return int
      */
-    public function create(array $authorData): int;
+    public function create(Author $author): int;
 
     /**
-     * Updates an existing author in the repository.
-     *
-     * @param array $authorData Associative array containing author data (['id' => ..., 'name' => ..., 'books' => ...]).
+     * @param Author $author
      * @return void
      */
-    public function update(array $authorData): void;
+    public function update(Author $author): void;
 
     /**
      * Deletes an author from the repository by their ID.

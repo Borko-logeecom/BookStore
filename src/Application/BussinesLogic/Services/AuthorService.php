@@ -2,6 +2,7 @@
 
 namespace BookStore\Application\BussinesLogic\Services;
 
+use BookStore\Application\BussinesLogic\Model\Author\Author;
 use BookStore\Application\BussinesLogic\RepositoryInterfaces\AuthorRepositoryInterface;
 use BookStore\Application\BussinesLogic\ServiceInterfaces\AuthorServiceInterface;
 use RuntimeException;
@@ -63,10 +64,10 @@ class AuthorService implements AuthorServiceInterface
         if (!$this->validateAuthorName($firstName, $lastName)) {
             return null;
         }
-
         $name = $firstName . ' ' . $lastName;
-        $authorData = ['name' => $name, 'books' => 0];
-        $newAuthorId = $this->authorRepository->create($authorData);
+        $author = new Author($name);
+
+        $newAuthorId = $this->authorRepository->create($author);
 
         return $this->getAuthorById($newAuthorId);
     }
@@ -90,8 +91,11 @@ class AuthorService implements AuthorServiceInterface
         }
 
         $name = $firstName . ' ' . $lastName;
-        $authorData = ['id' => $id, 'name' => $name, 'books' => $this->getAuthorById($id)['books'] ?? 0];
-        $this->authorRepository->update($authorData);
+        $author = new Author($name);
+        $author->setId($id);
+
+        //$authorData = ['id' => $id, 'name' => $name, 'books' => $this->getAuthorById($id)['books'] ?? 0];
+        $this->authorRepository->update($author);
     }
 
     /**

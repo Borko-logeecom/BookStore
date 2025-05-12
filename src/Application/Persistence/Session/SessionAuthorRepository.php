@@ -2,6 +2,7 @@
 
 namespace BookStore\Application\Persistence\Session;
 
+use BookStore\Application\BussinesLogic\Model\Author\Author;
 use BookStore\Application\BussinesLogic\RepositoryInterfaces\AuthorRepositoryInterface;
 use BookStore\Infrastructure\Session\SessionHandler;
 
@@ -46,13 +47,13 @@ class SessionAuthorRepository implements AuthorRepositoryInterface
     }
 
     /**
-     * Creates a new author in the session.
-     *
-     * @param array $authorData Associative array containing author data (['name' => ..., 'books' => ...]).
-     * @return int The ID of the newly created author.
+     * @param Author $author
+     * @return int
      */
-    public function create(array $authorData): int
+    public function create(Author $author): int
     {
+        $authorData = ['name' => $author->getName(), 'books' => $author->getBookCount()];
+
         $authorIdCounter = $this->sessionHandler->get('author_id_counter') ?? 0;
         $authors = $this->sessionHandler->get('authors') ?? [];
 
@@ -68,13 +69,12 @@ class SessionAuthorRepository implements AuthorRepositoryInterface
     }
 
     /**
-     * Updates an existing author in the session.
-     *
-     * @param array $authorData Associative array containing author data (['id' => ..., 'name' => ..., 'books' => ...]).
+     * @param Author $author
      * @return void
      */
-    public function update(array $authorData): void
+    public function update(Author $author): void
     {
+        $authorData = ['id' => $author->getId(), 'name' => $author->getName(), 'books' => $author->getBookCount()];
         $authors = $this->sessionHandler->get('authors') ?? [];
         foreach ($authors as $index => $author) {
             if (isset($author['id']) && $author['id'] === $authorData['id']) {

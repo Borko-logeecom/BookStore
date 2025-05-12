@@ -4,18 +4,38 @@ declare(strict_types=1);
 
 namespace BookStore\Infrastructure\Database;
 
+use Exception;
 use PDO;
+use PDOException;
 
-/**
- * Class responsible for establishing and providing a database connection.
- * Handles PDO connection logic.
- */
 class DatabaseConnection
 {
-
+    private PDO $connection;
     private static ?DatabaseConnection $instance = null;
 
+    private function __construct()
+    {
+        $dsn = 'mysql:host=localhost;dbname=bookstore_app';
+
+        try {
+            $this->connection = new PDO(
+                $dsn,
+                'root',
+                'password',
+                [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES => false
+                ]
+            );
+        } catch (PDOException $e) {
+            throw new Exception("Database connection failed: " . $e->getMessage());
+        }
+    }
+
     /**
+     * Creates and returns DatabaseConnection instance
+     *
      * @return DatabaseConnection
      */
     public static function getInstance(): DatabaseConnection
@@ -28,25 +48,12 @@ class DatabaseConnection
     }
 
     /**
-     * Establishes and returns a PDO database connection instance.
+     * Returns PDO instance
      *
-     * @return PDO The PDO database connection.
-     * @throws \PDOException If the connection fails.
+     * @return PDO
      */
-    public static function getConnection(): PDO
+    public function getConnection(): PDO
     {
-        $host = 'localhost';
-        $dbname = 'bookstore_app';
-        $username = 'root';
-        $password = 'password';
-
-        try {
-            $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-            return $pdo;
-        } catch (\PDOException $e) {
-            die("Database connection failed: " . $e->getMessage());
-        }
+        return $this->connection;
     }
 }

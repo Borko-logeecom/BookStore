@@ -2,6 +2,7 @@
 
 namespace BookStore\Application\Persistence\MySQL;
 
+use BookStore\Application\BussinesLogic\Model\Author\Author;
 use BookStore\Application\BussinesLogic\RepositoryInterfaces\AuthorRepositoryInterface;
 use BookStore\Infrastructure\Database\DatabaseConnection;
 use PDO;
@@ -44,28 +45,31 @@ class MySQLAuthorRepository implements AuthorRepositoryInterface
      * @param array $authorData Associative array containing author data (['name' => ..., 'books' => ...]).
      * @return int The ID of the newly created author.
      */
-    public function create(array $authorData): int
+    public function create(Author $author): int
     {
         $stmt = DatabaseConnection::getInstance()->getConnection()->prepare("INSERT INTO {$this->tableName} (name, books) VALUES (:name, :books)");
-        $stmt->bindParam(':name', $authorData['name'], PDO::PARAM_STR);
-        $stmt->bindParam(':books', $authorData['books'], PDO::PARAM_INT);
+        $name = $author->getName();
+        $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+        $bookCount = $author->getBookCount();
+        $stmt->bindParam(':books', $bookCount, PDO::PARAM_INT);
         $stmt->execute();
 
         return DatabaseConnection::getInstance()->getConnection()->lastInsertId();
     }
 
     /**
-     * Updates an existing author in the database.
-     *
-     * @param array $authorData Associative array containing author data (['id' => ..., 'name' => ..., 'books' => ...]).
+     * @param Author $author
      * @return void
      */
-    public function update(array $authorData): void
+    public function update(Author $author): void
     {
         $stmt = DatabaseConnection::getInstance()->getConnection()->prepare("UPDATE {$this->tableName} SET name = :name, books = :books WHERE id = :id");
-        $stmt->bindParam(':id', $authorData['id'], PDO::PARAM_INT);
-        $stmt->bindParam(':name', $authorData['name'], PDO::PARAM_STR);
-        $stmt->bindParam(':books', $authorData['books'], PDO::PARAM_INT);
+        $id = $author->getId();
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $name = $author->getName();
+        $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+        $bookCount = $author->getBookCount();
+        $stmt->bindParam(':books', $bookCount, PDO::PARAM_INT);
         $stmt->execute();
     }
 
