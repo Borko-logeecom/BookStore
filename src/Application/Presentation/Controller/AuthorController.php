@@ -113,7 +113,7 @@ class AuthorController
 
         if ($newAuthor) {
             $message = urlencode("Author " . htmlspecialchars($newAuthor['name']) . " has been successfully created.");
-            $redirectUrl = '/public/index.php?action=index&status=success&message=' . $message;
+            $redirectUrl = '/public/index.php?action=index';
 
             return new RedirectResponse($redirectUrl, 303);
         } else {
@@ -129,7 +129,7 @@ class AuthorController
      * Updates the author via the service and redirects.
      *
      * @param int $id The ID of the author being processed for edit.
-     * @return void
+     * @return RedirectResponse
      */
     public function processEdit(int $id): RedirectResponse
     {
@@ -143,7 +143,7 @@ class AuthorController
         $this->authorService->updateAuthor($id, $firstName, $lastName);
 
         $message = urlencode("Author with ID " . htmlspecialchars((string)$id) . " has been successfully updated.");
-        $redirectUrl = '/public/index.php?action=index&status=success&message=' . $message;
+        $redirectUrl = '/public/index.php?action=index';
 
         return new RedirectResponse($redirectUrl, 303);
     }
@@ -159,7 +159,7 @@ class AuthorController
     {
         $this->authorService->deleteAuthor($id);
         $message = urlencode("Author with ID " . htmlspecialchars((string)$id) . " has been successfully deleted.");
-        $redirectUrl = '/public/index.php?action=index&status=success&message=' . $message;
+        $redirectUrl = '/public/index.php?action=index';
 
         return new RedirectResponse($redirectUrl, 303);
     }

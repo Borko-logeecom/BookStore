@@ -34,7 +34,16 @@ class AuthorService implements AuthorServiceInterface
      */
     public function getAllAuthors(): array
     {
-        return $this->authorRepository->getAll();
+        $authorsFromDatabase = $this->authorRepository->getAll();
+        $authorObjects = [];
+
+        foreach ($authorsFromDatabase as $author) {
+            $newAuthor = new Author($author['name']);
+            $newAuthor->setId($author['id']);
+            $authorObjects[] = $newAuthor;
+        }
+
+        return $authorObjects;
     }
 
     /**

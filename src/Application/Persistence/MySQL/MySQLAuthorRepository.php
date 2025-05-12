@@ -42,16 +42,14 @@ class MySQLAuthorRepository implements AuthorRepositoryInterface
     /**
      * Creates a new author in the database.
      *
-     * @param array $authorData Associative array containing author data (['name' => ..., 'books' => ...]).
+     * @param Author $author
      * @return int The ID of the newly created author.
      */
     public function create(Author $author): int
     {
-        $stmt = DatabaseConnection::getInstance()->getConnection()->prepare("INSERT INTO {$this->tableName} (name, books) VALUES (:name, :books)");
+        $stmt = DatabaseConnection::getInstance()->getConnection()->prepare("INSERT INTO {$this->tableName} (name) VALUES (:name)");
         $name = $author->getName();
         $stmt->bindParam(':name', $name, PDO::PARAM_STR);
-        $bookCount = $author->getBookCount();
-        $stmt->bindParam(':books', $bookCount, PDO::PARAM_INT);
         $stmt->execute();
 
         return DatabaseConnection::getInstance()->getConnection()->lastInsertId();
@@ -63,13 +61,11 @@ class MySQLAuthorRepository implements AuthorRepositoryInterface
      */
     public function update(Author $author): void
     {
-        $stmt = DatabaseConnection::getInstance()->getConnection()->prepare("UPDATE {$this->tableName} SET name = :name, books = :books WHERE id = :id");
+        $stmt = DatabaseConnection::getInstance()->getConnection()->prepare("UPDATE {$this->tableName} SET name = :name WHERE id = :id");
         $id = $author->getId();
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $name = $author->getName();
         $stmt->bindParam(':name', $name, PDO::PARAM_STR);
-        $bookCount = $author->getBookCount();
-        $stmt->bindParam(':books', $bookCount, PDO::PARAM_INT);
         $stmt->execute();
     }
 

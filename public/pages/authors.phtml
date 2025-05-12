@@ -25,17 +25,17 @@
         <?php foreach ($authors as $author): ?>
             <tr>
                 <td>
-                    <a href="author_books.php?id=<?= $author['id'] ?>">
-                        👤 <?= htmlspecialchars($author['name']) ?>
+                    <a href="author_books.php?id=<?= $author->getId() ?>">
+                        👤 <?= htmlspecialchars($author->getName()) ?>
                     </a>
                 </td>
                 <td style="text-align: right;">
-                    <span class="book-count"><?= $author['books'] ?></span>
+                    <span class="book-count"><?= 0 ?></span>
                 </td>
                 <td class="actions" style="text-align: right;">
-                    <a href="/public/index.php?action=edit&id=<?= $author['id'] ?>">✏️</a>
+                    <a href="/public/index.php?action=edit&id=<?= $author->getId() ?>">✏️</a>
                     <a href="#"
-                       onclick="confirmDelete(<?= $author['id'] ?>, '<?= htmlspecialchars($author['name']) ?>')">🗑️</a>
+                       onclick="confirmDelete(<?= $author->getId() ?>, '<?= htmlspecialchars($author->getName()) ?>')">🗑️</a>
                 </td>
             </tr>
         <?php endforeach; ?>
