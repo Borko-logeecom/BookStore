@@ -22,33 +22,34 @@ class JsonResponse extends Response
         parent::__construct($statusCode);
 
         $this->addHeader('Content-Type', 'application/json; charset=UTF-8');
-
-        $jsonBody = json_encode($data, $encodingOptions);
-
-        if ($jsonBody === false) {
-            $this->body = json_encode(['error' => 'JSON encoding error'], $encodingOptions);
-        } else {
-            $this->body = $jsonBody;
-        }
+        $this->setJsonBody($data, $encodingOptions);
 
         foreach ($headers as $name => $value) {
-            if (is_array($value)) {
-                foreach ($value as $v) {
-                    $this->addHeader($name, $v, false);
-                }
-            } else {
-                $this->addHeader($name, $value, true);
-            }
+            $this->addHeader($name, $value);
         }
     }
 
     /**
+     * Sets the JSON body of the response.
+     *
+     * @param mixed $data
+     * @param int $encodingOptions
+     * @return void
+     */
+    private function setJsonBody(mixed $data, int $encodingOptions): void
+    {
+        $json = json_encode($data, $encodingOptions);
+        if ($json === false) {
+            throw new \RuntimeException('JSON encoding error: ' . json_last_error_msg());
+        }
+
+        $this->body = $json;
+    }
+
+    /**
      * Sends the JSON response to the client.
-     * Implements the abstract send method from the parent Response class.
-     * Sends status code, headers, and the JSON encoded body.
      *
      * @return void
-     * @throws \RuntimeException If headers have already been sent (via parent methods).
      */
     public function send(): void
     {
@@ -57,20 +58,5 @@ class JsonResponse extends Response
         $this->sendHeaders();
 
         echo $this->body;
-    }
-
-    /**
-     * Sets the body of the response.
-     * Note: For JsonResponse, the body is typically set via the constructor by encoding data.
-     * This method exists to fulfill the parent abstract contract but direct use is discouraged
-     * if you intend the response to be JSON encoded data.
-     *
-     * @param string $body The response body content.
-     * @return self
-     */
-    public function setBody(string $body): self
-    {
-        $this->body = $body;
-        return $this;
     }
 }

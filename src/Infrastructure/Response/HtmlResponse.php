@@ -19,26 +19,18 @@ class HtmlResponse extends Response
     public function __construct(string $body, int $statusCode = 200, array $headers = [])
     {
         parent::__construct($statusCode);
-        $this->body = $body;
+        $this->setBody($body);
         $this->addHeader('Content-Type', 'text/html; charset=UTF-8');
 
         foreach ($headers as $name => $value) {
-            if (is_array($value)) {
-                foreach ($value as $v) {
-                    $this->addHeader($name, $v, false);
-                }
-            } else {
-                $this->addHeader($name, $value, true);
-            }
+            $this->addHeader($name, $value);
         }
     }
 
     /**
      * Sends the HTML response to the client.
-     * Implements the abstract send method from the parent Response class.
      *
      * @return void
-     * @throws \RuntimeException If headers have already been sent.
      */
     public function send(): void
     {

@@ -24,7 +24,7 @@ abstract class Response
      */
     public function __construct(int $statusCode = 200)
     {
-        $this->statusCode = $statusCode;
+        $this->setStatusCode($statusCode);
     }
 
     /**
@@ -32,18 +32,22 @@ abstract class Response
      *
      * @param int $statusCode The HTTP status code.
      * @return self
+     * @throws \InvalidArgumentException If the status code is not valid.
      */
     public function setStatusCode(int $statusCode): self
     {
+        if ($statusCode < 100 || $statusCode > 599) {
+            throw new \InvalidArgumentException('Invalid HTTP status code.');
+        }
         $this->statusCode = $statusCode;
 
-        return $this; // Enables method chaining
+        return $this;
     }
 
     /**
      * Gets the HTTP status code of the response.
      *
-     * @return int The HTTP status code.
+     * @return int
      */
     public function getStatusCode(): int
     {
@@ -51,13 +55,11 @@ abstract class Response
     }
 
     /**
-     * Adds or sets an HTTP header for the response.
-     * Existing headers with the same name will be overwritten unless $replace is false.
-     * For headers that can have multiple values (e.g., Set-Cookie), set $replace to false.
+     * Adds an HTTP header to the response.
      *
      * @param string $name The header name.
      * @param string $value The header value.
-     * @param bool $replace Whether to replace existing headers with the same name (default true).
+     * @param bool $replace Whether to replace existing headers with the same name.
      * @return self
      */
     public function addHeader(string $name, string $value, bool $replace = true): self
@@ -79,11 +81,23 @@ abstract class Response
     /**
      * Gets all headers set for the response.
      *
-     * @return array Associative array of header names and values.
+     * @return array
      */
     public function getHeaders(): array
     {
         return $this->headers;
+    }
+
+    /**
+     * Clears all headers from the response.
+     *
+     * @return self
+     */
+    public function clearHeaders(): self
+    {
+        $this->headers = [];
+
+        return $this;
     }
 
     /**
@@ -102,7 +116,7 @@ abstract class Response
     /**
      * Gets the body of the response.
      *
-     * @return string The response body content.
+     * @return string
      */
     public function getBody(): string
     {
@@ -111,42 +125,36 @@ abstract class Response
 
     /**
      * Sends the HTTP status code, headers, and body to the client.
-     * This method must be implemented by concrete response types.
+     * Must be implemented by subclasses.
      *
      * @return void
      */
     abstract public function send(): void;
 
     /**
-     * Helper method to normalize header names (e.g., 'content-type' to 'Content-Type').
+     * Normalizes the header name format (e.g., 'content-type' to 'Content-Type').
      *
      * @param string $name The header name to normalize.
-     * @return string The normalized header name.
+     * @return string
      */
     protected function normalizeHeaderName(string $name): string
     {
-        // Convert to lower case, replace hyphens with spaces, capitalize each word, then replace spaces with hyphens
-        $name = str_replace('-', ' ', strtolower($name));
-        $name = ucwords($name);
-        $name = str_replace(' ', '-', $name);
-
-        return $name;
+        return str_replace(' ', '-', ucwords(str_replace('-', ' ', strtolower($name))));
     }
 
     /**
-     * Sends the HTTP status line (e.g., "HTTP/1.1 200 OK").
+     * Sends the HTTP status code to the client.
      *
      * @return void
-     * @throws \RuntimeException If headers have already been sent.
+     * @throws RuntimeException If headers have already been sent.
      */
     protected function sendStatusCode(): void
     {
         if (headers_sent()) {
-            throw new \RuntimeException('Headers have already been sent.');
+            throw new RuntimeException('Headers have already been sent.');
         }
 
-        $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1';
-        header($protocol . ' ' . $this->statusCode, true, $this->statusCode);
+        header($_SERVER['SERVER_PROTOCOL'] . ' ' . $this->statusCode, true, $this->statusCode);
     }
 
     /**
@@ -158,7 +166,7 @@ abstract class Response
     protected function sendHeaders(): void
     {
         if (headers_sent()) {
-            throw new \RuntimeException('Headers have already been sent.');
+            throw new RuntimeException('Headers have already been sent.');
         }
 
         foreach ($this->headers as $name => $value) {
@@ -171,4 +179,5 @@ abstract class Response
             }
         }
     }
+
 }
