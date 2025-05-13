@@ -128,24 +128,6 @@ class AuthorService implements AuthorServiceInterface
     }
 
     /**
-     * Retrieves an author by their full name.
-     *
-     * @param string $name The full name of the author.
-     * @return array|null The author data as an associative array, or null if not found.
-     */
-    private function getAuthorByName(string $name): ?array
-    {
-        $authors = $this->authorRepository->getAll();
-        foreach ($authors as $author) {
-            if ($author['name'] === $name) {
-                return $author;
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * Validates the author's first and last names.
      * Checks if names are not empty and not longer than 100 characters.
      *

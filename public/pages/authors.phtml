@@ -25,15 +25,15 @@
         <?php foreach ($authors as $author): ?>
             <tr>
                 <td>
-                    <a href="author_books.php?id=<?= $author->getId() ?>">
+                    <a href="/public/pages/booklist.phtml?id=<?= $author->getId() ?>">
                         👤 <?= htmlspecialchars($author->getName()) ?>
                     </a>
                 </td>
                 <td style="text-align: right;">
-                    <span class="book-count"><?= 0 ?></span>
+                    <span class="book-count"><?= $author->getBookCount() ?></span>
                 </td>
                 <td class="actions" style="text-align: right;">
-                    <a href="/public/index.php?action=edit&id=<?= $author->getId() ?>">✏️</a>
+                    <a href="/index.php?action=edit&id=<?= $author->getId() ?>">✏️</a>
                     <a href="#"
                        onclick="confirmDelete(<?= $author->getId() ?>, '<?= htmlspecialchars($author->getName()) ?>')">🗑️</a>
                 </td>
@@ -47,7 +47,7 @@
     </tbody>
 </table>
 
-<a class="create-btn" href="/public/index.php?action=create">+</a>
+<a class="create-btn" href="/index.php?action=create">+</a>
 
 <div id="deleteConfirmationModal"
      style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; justify-content: center; align-items: center;">
@@ -84,7 +84,7 @@
 
     function deleteAuthor() {
         const authorId = document.getElementById('authorIdToDelete').value;
-        window.location.href = '/public/index.php?action=delete&id=' + authorId;
+        window.location.href = '/index.php?action=delete&id=' + authorId;
     }
 </script>
 

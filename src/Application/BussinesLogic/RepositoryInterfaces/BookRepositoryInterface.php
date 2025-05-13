@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace BookStore\Application\BussinesLogic\RepositoryInterfaces;
 
+use BookStore\Application\BussinesLogic\Model\Author\Author;
+use BookStore\Application\BussinesLogic\Model\Book\Book;
+
 /**
  * Interface for accessing and managing Book data in a data store.
  * Defines the contract for Book Repository implementations.
@@ -14,11 +17,11 @@ interface BookRepositoryInterface
      * Finds all books belonging to a specific author.
      * Used to display the list of books for an author.
      *
-     * @param int $authorId The ID of the author.
+     * @param Author $author
      * @return array An array of associative arrays representing book data, or an empty array if no books are found.
      * Each book array should typically include keys like 'id', 'author_id', 'title', 'publication_year'.
      */
-    public function findByAuthorId(int $authorId): array;
+    public function findByAuthorId(Author $author): array;
 
     /**
      * Finds a single book by its ID.
@@ -33,22 +36,10 @@ interface BookRepositoryInterface
     /**
      * Creates a new book record in the data store.
      *
-     * @param array $bookData An associative array containing book data (e.g., ['author_id' => 1, 'title' => 'Book Title', 'publication_year' => 2023]).
-     * Must include 'author_id', 'title', and 'publication_year'.
-     * @return array|null The data of the newly created book (including its generated 'id'), or null on failure (e.g., database issue).
+     * @param Book $book
+     * @return int The data of the newly created book (including its generated 'id'), or null on failure (e.g., database issue).
      */
-    public function create(array $bookData): ?array;
-
-    /**
-     * Updates an existing book record in the data store by its ID.
-     * Used to save changes from the book edit form.
-     *
-     * @param int $bookId The ID of the book to update.
-     * @param array $bookData An associative array containing the updated book data (e.g., ['title' => 'New Title', 'publication_year' => 2024]).
-     * Should include 'title' and 'publication_year'.
-     * @return bool True on success, false on failure.
-     */
-    public function update(int $bookId, array $bookData): bool;
+    public function create(Book $book): int;
 
     /**
      * Deletes a book record from the data store by its ID.

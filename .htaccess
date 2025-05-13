@@ -1,0 +1,16 @@
+#RewriteEngine On
+#RewriteBase /
+#RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteRule ^(.*)$ index.php [QSA,L]
+
+RewriteEngine On
+
+# Rewrite URLs to remove 'src' from the URL
+# RewriteCond %{REQUEST_URI} ^/src/
+# RewriteRule ^src/(.*)$ /$1 [L,NC,R=301]
+# Redirect all non-file/directory requests to index.php
+RewriteCond %{REQUEST_URI} !^/booklist\.html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]

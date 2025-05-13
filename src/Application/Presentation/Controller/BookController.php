@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace BookStore\Application\Presentation\Controller;
 
+use BookStore\Application\BussinesLogic\Model\Author\Author;
+use BookStore\Application\BussinesLogic\Model\Book\Book;
 use BookStore\Application\BussinesLogic\ServiceInterfaces\BookServiceInterface;
-use BookStore\Application\BussinesLogic\Services\BookService;
+use BookStore\Infrastructure\Response\HtmlResponse;
 use BookStore\Infrastructure\Response\JsonResponse;
-use InvalidArgumentException;
-use RuntimeException;
-use Throwable;
+use BookStore\Infrastructure\Response\RedirectResponse;
+use BookStore\Infrastructure\Response\Response;
+
 
 
 /**
@@ -32,37 +34,25 @@ class BookController
         $this->bookService = $bookService;
     }
 
-    /**
-     * Handles requests to get all books for a specific author.
-     * Expected to be called via AJAX from the author's book page.
-     * Expects author_id as a parameter passed by the router (index.php).
-     *
-     * @param int $authorId The ID of the author whose books to retrieve.
-     * This parameter will be extracted from the request URL/parameters by the router
-     * and passed as an argument to this method.
-     * @return JsonResponse A JSON response containing the list of books or an error message.
-     */
-    public function getBooksByAuthorId(int $authorId): JsonResponse
+    public function getBooksByAuthor(int $authorID): JsonResponse
     {
-        if ($authorId <= 0) {
-            return new JsonResponse(['error' => 'Invalid author ID provided.'], 400);
-        }
+        $books = $this->bookService->getBooksByAuthorId($authorID);
 
-        try {
-            $books = $this->bookService->getBooksByAuthorId($authorId);
-
-            return new JsonResponse($books, 200);
-
-        } catch (InvalidArgumentException $e) {
-            return new JsonResponse(['error' => $e->getMessage()], 400);
-        } catch (RuntimeException $e) {
-            error_log("BookController Runtime Exception in getBooksByAuthorId: " . $e->getMessage()); // Example logging
-
-            return new JsonResponse(['error' => 'An internal server error occurred while fetching books.'], 500);
-        } catch (Throwable $e) {
-            error_log("BookController Unexpected Exception in getBooksByAuthorId: " . $e->getMessage()); // Example logging
-
-            return new JsonResponse(['error' => 'An unexpected error occurred.'], 500);
-        }
+        return new JsonResponse($books);
     }
+
+    public function createBook() :JsonResponse
+    {
+        $book = json_decode(file_get_contents('php://input'), true);
+        $newBook = $this->bookService->createBook($book);
+
+        return new JsonResponse($newBook);
+    }
+
+    public function deleteBook(int $bookID): JsonResponse
+    {
+        return new JsonResponse($this->bookService->deleteBook($bookID));
+    }
+
+
 }

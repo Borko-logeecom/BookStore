@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace BookStore\Application\BussinesLogic\Services;
 
+use BookStore\Application\BussinesLogic\Model\Author\Author;
+use BookStore\Application\BussinesLogic\Model\Book\Book;
 use BookStore\Application\BussinesLogic\RepositoryInterfaces\BookRepositoryInterface;
 use BookStore\Application\BussinesLogic\ServiceInterfaces\BookServiceInterface;
 use InvalidArgumentException;
@@ -40,11 +42,10 @@ class BookService implements BookServiceInterface
      */
     public function getBooksByAuthorId(int $authorId): array
     {
-        try {
-            return $this->bookRepository->findByAuthorId($authorId);
-        } catch (RuntimeException $e) {
-            throw $e;
-        }
+        $author = new Author('');
+        $author->setId($authorId);
+
+        return $this->bookRepository->findByAuthorId($author);
     }
 
     /**
@@ -56,11 +57,7 @@ class BookService implements BookServiceInterface
      */
     public function getBookById(int $bookId): ?array
     {
-        try {
-            return $this->bookRepository->getById($bookId);
-        } catch (RuntimeException $e) {
-            throw $e;
-        }
+        return $this->bookRepository->getById($bookId);
     }
 
     /**
@@ -74,65 +71,17 @@ class BookService implements BookServiceInterface
      */
     public function createBook(array $bookData): ?array
     {
-        if (!isset($bookData['author_id'], $bookData['title'], $bookData['publication_year'])) {
-            throw new InvalidArgumentException("Required book data (author_id, title, publication_year) is missing.");
-        }
-        if (!is_int($bookData['author_id']) || $bookData['author_id'] <= 0) {
-            throw new InvalidArgumentException("Invalid author_id provided.");
-        }
-        if (empty($bookData['title']) || !is_string($bookData['title']) || strlen($bookData['title']) > 255) {
-            throw new InvalidArgumentException("Invalid or missing book title.");
-        }
-        if (!is_numeric($bookData['publication_year']) || $bookData['publication_year'] <= 0 || $bookData['publication_year'] > (int)date("Y")) {
-            throw new InvalidArgumentException("Invalid publication year. Must be a positive number not in the future.");
-        }
-        try {
-            return $this->bookRepository->create($bookData);
-        } catch (RuntimeException $e) {
-            throw $e;
-        }
+
+        $title = $bookData['title'] ?? '';
+        $year = $bookData['year'] ?? '';
+        $authorId = isset($bookData['author_id']) ? (int)$bookData['author_id'] : null;
+
+        $book = new Book(0,$title, $year, $authorId);
+
+        $bookID = $this->bookRepository->create($book);
+
+        return $this->getBookById($bookID);
     }
-
-    /**
-     * Updates an existing book.
-     * Includes basic validation for updated book data.
-     *
-     * @param int $bookId The ID of the book to update.
-     * @param array $bookData Associative array with updated book data (must include 'title', 'publication_year').
-     * @return bool True on success, false on failure (e.g., book not found, invalid data).
-     * @throws InvalidArgumentException If input data is invalid.
-     * @throws RuntimeException If a repository error occurs.
-     */
-    public function updateBook(int $bookId, array $bookData): bool
-    {
-        // Basic check for required data keys
-        if (!isset($bookData['title'], $bookData['publication_year'])) {
-            throw new InvalidArgumentException("Required book data (title, publication_year) for update is missing.");
-        }
-
-        // Validate title
-        if (empty($bookData['title']) || !is_string($bookData['title']) || strlen($bookData['title']) > 255) {
-            throw new InvalidArgumentException("Invalid or missing book title for update.");
-        }
-
-        // Validate publication_year
-        if (!is_numeric($bookData['publication_year']) || $bookData['publication_year'] <= 0 || $bookData['publication_year'] > (int)date("Y")) {
-            throw new InvalidArgumentException("Invalid publication year for update. Must be a positive number not in the future.");
-        }
-        // --- End Validation ---
-
-        try {
-            $book = $this->bookRepository->getById($bookId);
-            if (!$book) {
-                return false;
-            }
-
-            return $this->bookRepository->update($bookId, $bookData);
-        } catch (RuntimeException $e) {
-            throw $e;
-        }
-    }
-
 
     /**
      * Deletes a book.
@@ -143,11 +92,8 @@ class BookService implements BookServiceInterface
      */
     public function deleteBook(int $bookId): bool
     {
-        try {
-            return $this->bookRepository->delete($bookId);
-        } catch (RuntimeException $e) {
-            throw $e;
-        }
+        return $this->bookRepository->delete($bookId);
+
     }
 
     /**
@@ -160,10 +106,7 @@ class BookService implements BookServiceInterface
      */
     public function deleteBooksByAuthorId(int $authorId): bool
     {
-        try {
-            return $this->bookRepository->deleteAllByAuthorId($authorId);
-        } catch (RuntimeException $e) {
-            throw $e;
-        }
+        return $this->bookRepository->deleteAllByAuthorId($authorId);
     }
+
 }

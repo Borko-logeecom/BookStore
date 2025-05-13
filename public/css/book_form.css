@@ -1,0 +1,192 @@
+/* --- Core Overlay Styles (Common for Book Forms & Delete Modal) --- */
+.form-wrapper .close-form {
+    position: absolute; /* Position it relative to the form-wrapper */
+    top: 10px; /* Adjust distance from the top */
+    right: 10px; /* Adjust distance from the right */
+    font-size: 1.2em; /* Make the X larger */
+    font-weight: bold;
+    color: #aaa; /* A subtle grey color */
+    cursor: pointer; /* Indicate it's clickable */
+    border: none;
+    background: none;
+    padding: 5px; /* Add some clickable area */
+    line-height: 1; /* Ensure vertical centering of text */
+    transition: color 0.2s ease; /* Smooth hover effect */
+}
+
+.form-wrapper .close-form:hover {
+    color: #333; /* Darken color on hover */
+}
+
+.form-wrapper,
+.modal {
+    /* Positioning & Centering */
+    position: fixed; /* Position relative to the viewport */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the element */
+    z-index: 1000; /* Ensure it's above other page content */
+
+    /* Appearance based on your author form styles */
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Softer shadow */
+    padding: 25px; /* Slightly more padding */
+    box-sizing: border-box;
+
+    /* Sizing */
+    width: 90%; /* Responsive width */
+    max-width: 450px; /* Max width for larger screens */
+    min-width: 300px; /* Minimum width */
+}
+
+/* --- Book Add/Edit Form (.form-wrapper) Specific Styles --- */
+
+/* Apply fieldset/legend styles within the form */
+.form-wrapper fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.form-wrapper legend {
+    font-size: 1.4em; /* Larger title */
+    font-weight: bold;
+    padding-bottom: 12px; /* Space below legend */
+    margin-bottom: 20px; /* Space after legend */
+    border-bottom: 1px solid #eee; /* Subtle separator */
+    width: 100%; /* Ensure border spans width */
+    display: block; /* Needed for width */
+    box-sizing: border-box;
+}
+
+/* Apply label/input styles within the form */
+.form-wrapper label {
+    display: block;
+    margin-top: 15px; /* More space between fields */
+    margin-bottom: 5px; /* Space before input */
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.form-wrapper input[type="text"],
+.form-wrapper input[type="number"] {
+    width: 100%;
+    padding: 10px; /* Slightly larger padding */
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px; /* Match button radius */
+}
+
+/* Apply button styles within the form */
+.form-wrapper .button-div { /* If you wrap button in a div */
+    text-align: right; /* Align button to the right */
+}
+
+.form-wrapper button[type="submit"] {
+    margin-top: 30px; /* Increased top margin for more space */
+    width: auto;
+    min-width: 100px;
+    padding: 10px 20px;
+    font-weight: bold;
+    font-size: 1em;
+    background-color: #5cacee;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: inline-block; /* Keep as block for alignment */
+}
+
+.form-wrapper button[type="submit"]:hover {
+    background-color: #4a9ad6; /* Darker blue on hover */
+}
+
+
+/* --- Delete Confirmation Modal (.modal) Specific Styles --- */
+
+/* Modal header */
+.modal .modal-header {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.modal .modal-header h2 {
+    margin: 0 0 0 12px; /* Space after icon */
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+.modal .exclamation-icon {
+    font-size: 1.8em; /* Make icon bigger */
+    color: #f0ad4e; /* Warning color */
+}
+
+/* Modal body */
+.modal .modal-body {
+    margin-bottom: 25px; /* More space before footer */
+    font-size: 1em;
+    line-height: 1.6; /* Better readability */
+    color: #333; /* Slightly darker text */
+}
+
+.modal .modal-body b { /* Make book title stand out */
+    color: #000;
+}
+
+/* Modal footer */
+.modal .modal-footer {
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+    text-align: right; /* Align buttons to the right */
+}
+
+/* General button style for modal footer */
+.modal .modal-footer button {
+    margin-left: 10px; /* Space between buttons */
+    padding: 8px 18px; /* Adjust padding */
+    font-weight: bold;
+    font-size: 0.95em;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid transparent; /* Start with transparent border */
+    transition: background-color 0.2s ease, border-color 0.2s ease; /* Smooth hover */
+}
+
+/* Specific button styles in modal footer */
+.modal .modal-footer #cancelButton {
+    background-color: #f0f0f0; /* Light grey */
+    color: #333;
+    border-color: #ccc;
+}
+
+.modal .modal-footer #cancelButton:hover {
+    background-color: #e0e0e0;
+    border-color: #bbb;
+}
+
+.modal .modal-footer #deleteButton {
+    background-color: #d9534f; /* Red color */
+    color: white;
+    border-color: #d43f3a;
+}
+
+.modal .modal-footer #deleteButton:hover {
+    background-color: #c9302c;
+    border-color: #ac2925;
+}
+
+body.overlay-active::before {
+    content: ""; /* Required for pseudo-elements */
+    position: fixed; /* Cover the whole viewport */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black (adjust 0.6 for darkness) */
+    z-index: 999; /* Below the modal (1000), above everything else */
+}

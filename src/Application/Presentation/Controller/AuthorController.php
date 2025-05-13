@@ -6,6 +6,7 @@ use BookStore\Application\BussinesLogic\ServiceInterfaces\AuthorServiceInterface
 use BookStore\Application\BussinesLogic\Services\AuthorService;
 use BookStore\Infrastructure\Response\HtmlResponse;
 use BookStore\Infrastructure\Response\RedirectResponse;
+use BookStore\Infrastructure\Response\Response;
 
 /**
  * Controller class for handling author-related user requests.
@@ -31,7 +32,7 @@ class AuthorController
      *
      * @return HtmlResponse The HTTP response containing the author list HTML.
      */
-    public function index(): HtmlResponse
+    public function index(): Response
     {
         $authors = $this->authorService->getAllAuthors();
 
@@ -103,7 +104,7 @@ class AuthorController
     public function processCreate(): RedirectResponse
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return new RedirectResponse('/public/index.php?action=create', 303);
+            return new RedirectResponse('/index.php?action=create', 303);
         }
 
         $firstName = $_POST['firstName'] ?? '';
@@ -113,12 +114,12 @@ class AuthorController
 
         if ($newAuthor) {
             $message = urlencode("Author " . htmlspecialchars($newAuthor['name']) . " has been successfully created.");
-            $redirectUrl = '/public/index.php?action=index';
+            $redirectUrl = '/index.php?action=index';
 
             return new RedirectResponse($redirectUrl, 303);
         } else {
             $errorMessage = urlencode("Error: Invalid input for author creation. First/Last name might be empty or too long.");
-            $redirectUrl = '/public/index.php?action=create&status=error&message=' . $errorMessage;
+            $redirectUrl = '/index.php?action=create&status=error&message=' . $errorMessage;
 
             return new RedirectResponse($redirectUrl, 303);
         }
@@ -134,7 +135,7 @@ class AuthorController
     public function processEdit(int $id): RedirectResponse
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return new RedirectResponse('/public/index.php?action=index', 303);
+            return new RedirectResponse('/index.php?action=index', 303);
         }
 
         $firstName = $_POST['firstName'] ?? '';
@@ -143,7 +144,7 @@ class AuthorController
         $this->authorService->updateAuthor($id, $firstName, $lastName);
 
         $message = urlencode("Author with ID " . htmlspecialchars((string)$id) . " has been successfully updated.");
-        $redirectUrl = '/public/index.php?action=index';
+        $redirectUrl = '/index.php?action=index';
 
         return new RedirectResponse($redirectUrl, 303);
     }
@@ -159,7 +160,7 @@ class AuthorController
     {
         $this->authorService->deleteAuthor($id);
         $message = urlencode("Author with ID " . htmlspecialchars((string)$id) . " has been successfully deleted.");
-        $redirectUrl = '/public/index.php?action=index';
+        $redirectUrl = '/index.php?action=index';
 
         return new RedirectResponse($redirectUrl, 303);
     }

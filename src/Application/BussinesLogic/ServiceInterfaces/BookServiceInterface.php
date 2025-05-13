@@ -43,18 +43,6 @@ interface BookServiceInterface
     public function createBook(array $bookData): ?array;
 
     /**
-     * Updates an existing book.
-     * Includes basic validation for updated book data.
-     *
-     * @param int $bookId The ID of the book to update.
-     * @param array $bookData Associative array with updated book data (must include 'title', 'publication_year').
-     * @return bool True on success, false on failure (e.g., book not found, invalid data).
-     * @throws InvalidArgumentException If input data is invalid.
-     * @throws RuntimeException If a repository error occurs.
-     */
-    public function updateBook(int $bookId, array $bookData): bool;
-
-    /**
      * Deletes a book.
      *
      * @param int $bookId The ID of the book to delete.

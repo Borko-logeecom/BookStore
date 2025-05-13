@@ -50,7 +50,8 @@ class ServiceFactory
 
         ServiceRegistry::set(
             BookRepositoryInterface::class,
-            new SessionBookRepository());
+            new MySQLBookRepository()
+        );
 
         ServiceRegistry::set(
             BookServiceInterface::class,
@@ -68,18 +69,6 @@ class ServiceFactory
         ServiceRegistry::set(
             AuthorController::class,
             new AuthorController(ServiceRegistry::get(AuthorServiceInterface::class))
-        );
-
-        //Book bootstrap
-
-        ServiceRegistry::set(
-            BookRepositoryInterface::class,
-            new SessionBookRepository()
-        );
-
-        ServiceRegistry::set(
-            BookServiceInterface::class,
-            new BookService(ServiceRegistry::get(BookRepositoryInterface::class))
         );
 
         ServiceRegistry::set(
