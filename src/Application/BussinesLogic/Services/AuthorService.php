@@ -40,6 +40,10 @@ class AuthorService implements AuthorServiceInterface
         foreach ($authorsFromDatabase as $author) {
             $newAuthor = new Author($author['name']);
             $newAuthor->setId($author['id']);
+
+            $counter = count($this->bookService->getBooksByAuthorId($author['id']));
+            $newAuthor->setBookCount($counter);
+
             $authorObjects[] = $newAuthor;
         }
 
