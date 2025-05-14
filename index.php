@@ -89,12 +89,6 @@ try {
     {
         $response = $bookController->createBook();
     }
-    // POST /api/books/{id}/edit
-    elseif ($requestMethod === 'POST' && preg_match('/^\/api\/books\/(\d+)\/edit$/', $routePath, $matches))
-    {
-        $bookID = (int)$matches[1];
-        $response = $bookController->editBook($bookID);
-    }
     // POST /api/books/{id}/delete
     elseif ($requestMethod === 'POST' && preg_match('/^\/api\/books\/(\d+)\/delete$/', $routePath, $matches))
     {

@@ -94,17 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const actionDiv = document.createElement('div')
             actionDiv.className = 'actions'
 
-            const editButton = document.createElement('a')
-            editButton.className = 'button edit'
-            editButton.href = '#'
-
-            const editImg = document.createElement('img')
-            editImg.src = '../images/pen.png'
-            editImg.alt = 'pen'
-
-            editButton.appendChild(editImg)
-            editButton.onclick = () => showEditForm(book)
-
             const deleteButton = document.createElement('a')
             deleteButton.className = 'button delete'
             deleteButton.href = '#'
@@ -116,7 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
             deleteButton.appendChild(deleteImg)
             deleteButton.onclick = () => showDeleteDialog(book)
 
-            actionDiv.appendChild(editButton)
             actionDiv.appendChild(deleteButton)
             tdActions.appendChild(actionDiv)
 
@@ -127,90 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         table.appendChild(tbody)
         container.appendChild(table)
-    }
-
-    function showEditForm(book) {
-        removeExistingForm()
-
-        const formWrapper = document.createElement('div')
-        formWrapper.className = 'form-wrapper'
-
-        const closeButton = document.createElement('button')
-        closeButton.type = 'button'
-        closeButton.className = 'close-form'
-        closeButton.textContent = 'X'
-        formWrapper.appendChild(closeButton)
-
-        const form = document.createElement('form')
-        const fieldset = document.createElement('fieldset')
-        const legend = document.createElement('legend')
-        legend.textContent = `Book Edit (${book.id})`
-        fieldset.appendChild(legend)
-
-        const titleLabel = document.createElement('label')
-        titleLabel.setAttribute('for', 'title')
-        titleLabel.textContent = 'Title'
-        fieldset.appendChild(titleLabel)
-
-        const titleInput = document.createElement('input')
-        titleInput.type = 'text'
-        titleInput.id = 'title'
-        titleInput.name = 'title'
-        titleInput.value = book.title
-        fieldset.appendChild(titleInput)
-
-        const yearLabel = document.createElement('label')
-        yearLabel.setAttribute('for', 'year')
-        yearLabel.textContent = 'Year'
-        fieldset.appendChild(yearLabel)
-
-        const yearInput = document.createElement('input')
-        yearInput.type = 'number'
-        yearInput.id = 'year'
-        yearInput.name = 'year'
-        yearInput.value = book.year
-        fieldset.appendChild(yearInput)
-
-        const buttonDiv = document.createElement('div')
-        buttonDiv.className = 'button-div'
-        const saveButton = document.createElement('button')
-        saveButton.type = 'submit'
-        saveButton.textContent = 'Save'
-        buttonDiv.appendChild(saveButton)
-        fieldset.appendChild(buttonDiv)
-
-        form.appendChild(fieldset)
-        formWrapper.appendChild(form)
-
-        closeButton.addEventListener('click', () => {
-            document.body.classList.remove('overlay-active')
-            formWrapper.remove()
-        })
-
-        form.onsubmit = (e) => {
-            e.preventDefault()
-
-            const updatedBook = {
-                id: book.id,
-                author_id: authorId,
-                title: titleInput.value,
-                year: yearInput.value
-            }
-
-            postData(`/api/books/${book.id}/edit`, updatedBook)
-                .then(() => {
-                    document.body.classList.remove('overlay-active')
-                    formWrapper.remove()
-                    loadBooks()
-                })
-                .catch(error => {
-                    console.error('Error updating book:', error)
-                    window.location.href = `error.phtml?message=${encodeURIComponent(error.message)}`
-                })
-        }
-
-        document.body.classList.add('overlay-active')
-        appContainer.appendChild(formWrapper)
     }
 
     function showAddForm() {
