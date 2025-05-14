@@ -8,11 +8,24 @@ use Exception;
 use PDO;
 use PDOException;
 
+/**
+ * Singleton class responsible for managing the database connection.
+ *
+ * This class provides a single instance of a PDO connection to the MySQL database.
+ * It uses the Singleton design pattern to ensure that only one database connection exists.
+ */
 class DatabaseConnection
 {
     private PDO $connection;
     private static ?DatabaseConnection $instance = null;
 
+    /**
+     * Private constructor to prevent direct instantiation.
+     *
+     * Establishes a PDO connection to the MySQL database using the specified DSN, username, and password.
+     *
+     * @throws Exception If the database connection fails.
+     */
     private function __construct()
     {
         $dsn = 'mysql:host=localhost;dbname=bookstore_app';
@@ -34,9 +47,11 @@ class DatabaseConnection
     }
 
     /**
-     * Creates and returns DatabaseConnection instance
+     * Returns the singleton instance of the DatabaseConnection.
      *
-     * @return DatabaseConnection
+     * If an instance does not exist, it is created.
+     *
+     * @return DatabaseConnection The singleton instance of this class.
      */
     public static function getInstance(): DatabaseConnection
     {
@@ -48,9 +63,11 @@ class DatabaseConnection
     }
 
     /**
-     * Returns PDO instance
+     * Returns the active PDO connection instance.
      *
-     * @return PDO
+     * This method provides access to the PDO connection for executing database queries.
+     *
+     * @return PDO The active PDO connection.
      */
     public function getConnection(): PDO
     {

@@ -8,12 +8,19 @@ use BookStore\Infrastructure\Session\SessionHandler;
 
 /**
  * Repository class for interacting with author data stored in PHP sessions.
+ *
+ * This repository provides methods to create, read, update, and delete author data
+ * stored in the session, making it a lightweight alternative to a database.
  * NOTE: This repository is intended for legacy data handling and is being replaced by MySQL.
  */
 class SessionAuthorRepository implements AuthorRepositoryInterface
 {
     private SessionHandler $sessionHandler;
 
+    /**
+     * Constructor.
+     * Initializes the SessionHandler instance.
+     */
     public function __construct()
     {
         $this->sessionHandler = SessionHandler::getInstance();
@@ -47,8 +54,12 @@ class SessionAuthorRepository implements AuthorRepositoryInterface
     }
 
     /**
-     * @param Author $author
-     * @return int
+     * Creates a new author in the session.
+     *
+     * The author ID is automatically incremented using a session-stored counter.
+     *
+     * @param Author $author The author object to be saved.
+     * @return int The ID of the newly created author.
      */
     public function create(Author $author): int
     {
@@ -69,7 +80,9 @@ class SessionAuthorRepository implements AuthorRepositoryInterface
     }
 
     /**
-     * @param Author $author
+     * Updates an existing author in the session.
+     *
+     * @param Author $author The author object containing updated data.
      * @return void
      */
     public function update(Author $author): void

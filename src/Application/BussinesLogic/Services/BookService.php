@@ -11,12 +11,11 @@ use BookStore\Application\BussinesLogic\ServiceInterfaces\BookServiceInterface;
 use InvalidArgumentException;
 use RuntimeException;
 
-// Using for validation errors in input data
-// Using for general application/repository errors
-
 /**
  * Service class for handling book-related business logic.
- * Depends on a BookRepositoryInterface implementation.
+ *
+ * This service provides methods for managing books, including creating, retrieving, and deleting books.
+ * It depends on a BookRepositoryInterface implementation.
  */
 class BookService implements BookServiceInterface
 {
@@ -37,7 +36,7 @@ class BookService implements BookServiceInterface
      * Gets all books belonging to a specific author.
      *
      * @param int $authorId The ID of the author.
-     * @return array An array of book data, or empty array if none found.
+     * @return array An array of book data, or an empty array if none found.
      * @throws RuntimeException If a repository error occurs.
      */
     public function getBooksByAuthorId(int $authorId): array
@@ -52,7 +51,7 @@ class BookService implements BookServiceInterface
      * Gets a single book by its ID.
      *
      * @param int $bookId The ID of the book.
-     * @return array|null Book data, or null if not found.
+     * @return array|null Book data as an associative array, or null if not found.
      * @throws RuntimeException If a repository error occurs.
      */
     public function getBookById(int $bookId): ?array
@@ -62,7 +61,7 @@ class BookService implements BookServiceInterface
 
     /**
      * Creates a new book.
-     * Includes basic validation for book data.
+     * Performs basic validation for book data.
      *
      * @param array $bookData Associative array with book data (must include 'author_id', 'title', 'publication_year').
      * @return array|null Data of the newly created book (including ID), or null on failure (e.g., invalid data).
@@ -84,7 +83,7 @@ class BookService implements BookServiceInterface
     }
 
     /**
-     * Deletes a book.
+     * Deletes a book by its ID.
      *
      * @param int $bookId The ID of the book to delete.
      * @return bool True on success, false on failure.

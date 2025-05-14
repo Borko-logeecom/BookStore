@@ -9,6 +9,9 @@ use RuntimeException;
 
 /**
  * Service class for handling author-related business logic.
+ *
+ * This service manages author creation, retrieval, updating, and deletion,
+ * as well as validation of author data.
  */
 class AuthorService implements AuthorServiceInterface
 {
@@ -17,9 +20,10 @@ class AuthorService implements AuthorServiceInterface
 
     /**
      * Constructor.
-     * Initializes the AuthorService with a MySQLAuthorRepository instance.
+     * Initializes the AuthorService with a repository and a BookService instance.
      *
      * @param AuthorRepositoryInterface $authorRepository The author repository instance.
+     * @param BookService $bookService The book service instance.
      */
     public function __construct(AuthorRepositoryInterface $authorRepository, BookService $bookService)
     {
@@ -30,7 +34,7 @@ class AuthorService implements AuthorServiceInterface
     /**
      * Retrieves all authors.
      *
-     * @return array A list of all authors.
+     * @return array A list of Author objects with their associated book count.
      */
     public function getAllAuthors(): array
     {
@@ -116,7 +120,7 @@ class AuthorService implements AuthorServiceInterface
      * Also deletes all books associated with the author.
      *
      * @param int $id The ID of the author to delete.
-     * @return void // Changed back to void
+     * @return void
      * @throws RuntimeException If a repository error occurs.
      */
     public function deleteAuthor(int $id): void

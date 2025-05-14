@@ -2,21 +2,33 @@
 
 namespace BookStore\Application\BussinesLogic\Model\Author;
 
+/**
+ * Represents an author entity in the BookStore application.
+ *
+ * This class provides methods to get and set the author's ID, name, and the number of books they have authored.
+ */
 class Author
 {
     private int $id;
     private string $name;
     private int $bookCount = 0;
 
+    /**
+     * Constructor to initialize the Author object.
+     *
+     * @param string $name The name of the author.
+     * @param int $bookCount The number of books authored (default: 0).
+     */
     public function __construct(string $name, int $bookCount = 0)
     {
         $this->name = $name;
         $this->bookCount = $bookCount;
     }
 
-
     /**
-     * @return int
+     * Gets the ID of the author.
+     *
+     * @return int The author's ID.
      */
     public function getId(): int
     {
@@ -24,15 +36,20 @@ class Author
     }
 
     /**
-     * @param int $id
+     * Sets the ID of the author.
+     *
+     * @param int $id The author's ID.
      * @return void
      */
     public function setId(int $id): void{
         $this->id = $id;
     }
 
+
     /**
-     * @return string
+     * Gets the name of the author.
+     *
+     * @return string The author's name.
      */
     public function getName(): string
     {
@@ -40,9 +57,9 @@ class Author
     }
 
     /**
-     * Getter for first name
+     * Gets the first name of the author.
      *
-     * @return string
+     * @return string The first name of the author.
      */
     public function getFirstName(): string
     {
@@ -50,9 +67,9 @@ class Author
     }
 
     /**
-     * Getter for last name
+     * Gets the last name of the author.
      *
-     * @return string
+     * @return string The last name of the author.
      */
     public function getLastName(): string
     {
@@ -60,7 +77,9 @@ class Author
     }
 
     /**
-     * @param string $name
+     * Sets the name of the author.
+     *
+     * @param string $name The new name of the author.
      * @return void
      */
     public function setName(string $name): void
@@ -69,7 +88,9 @@ class Author
     }
 
     /**
-     * @return int
+     * Gets the number of books associated with the author.
+     *
+     * @return int The number of books.
      */
     public function getBookCount(): int
     {
@@ -77,7 +98,9 @@ class Author
     }
 
     /**
-     * @param int $bookCount
+     * Sets the number of books associated with the author.
+     *
+     * @param int $bookCount The number of books.
      * @return void
      */
     public function setBookCount(int $bookCount): void

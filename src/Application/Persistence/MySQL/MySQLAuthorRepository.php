@@ -9,6 +9,9 @@ use PDO;
 
 /**
  * Repository class for interacting with author data in a MySQL database.
+ *
+ * This class provides methods to create, read, update, and delete author data.
+ * It uses a MySQL database connection managed by the DatabaseConnection singleton.
  */
 class MySQLAuthorRepository implements AuthorRepositoryInterface
 {
@@ -22,7 +25,8 @@ class MySQLAuthorRepository implements AuthorRepositoryInterface
      */
     public function getById(int $id): ?array
     {
-        $stmt = DatabaseConnection::getInstance()->getConnection()->prepare("SELECT * FROM {$this->tableName} WHERE id = :id");
+        $stmt = DatabaseConnection::getInstance()->getConnection()
+            ->prepare("SELECT * FROM {$this->tableName} WHERE id = :id");
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
 
@@ -36,18 +40,20 @@ class MySQLAuthorRepository implements AuthorRepositoryInterface
      */
     public function getAll(): array
     {
-        return DatabaseConnection::getInstance()->getConnection()->query("SELECT * FROM {$this->tableName}")->fetchAll(PDO::FETCH_ASSOC);
+        return DatabaseConnection::getInstance()->getConnection()
+            ->query("SELECT * FROM {$this->tableName}")->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
      * Creates a new author in the database.
      *
-     * @param Author $author
+     * @param Author $author The author object to be saved.
      * @return int The ID of the newly created author.
      */
     public function create(Author $author): int
     {
-        $stmt = DatabaseConnection::getInstance()->getConnection()->prepare("INSERT INTO {$this->tableName} (name) VALUES (:name)");
+        $stmt = DatabaseConnection::getInstance()->getConnection()
+            ->prepare("INSERT INTO {$this->tableName} (name) VALUES (:name)");
         $name = $author->getName();
         $stmt->bindParam(':name', $name, PDO::PARAM_STR);
         $stmt->execute();
@@ -56,12 +62,15 @@ class MySQLAuthorRepository implements AuthorRepositoryInterface
     }
 
     /**
-     * @param Author $author
+     * Updates an existing author in the database.
+     *
+     * @param Author $author The author object containing updated data.
      * @return void
      */
     public function update(Author $author): void
     {
-        $stmt = DatabaseConnection::getInstance()->getConnection()->prepare("UPDATE {$this->tableName} SET name = :name WHERE id = :id");
+        $stmt = DatabaseConnection::getInstance()->getConnection()
+            ->prepare("UPDATE {$this->tableName} SET name = :name WHERE id = :id");
         $id = $author->getId();
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $name = $author->getName();
@@ -77,7 +86,8 @@ class MySQLAuthorRepository implements AuthorRepositoryInterface
      */
     public function delete(int $id): void
     {
-        $stmt = DatabaseConnection::getInstance()->getConnection()->prepare("DELETE FROM {$this->tableName} WHERE id = :id");
+        $stmt = DatabaseConnection::getInstance()->getConnection()
+            ->prepare("DELETE FROM {$this->tableName} WHERE id = :id");
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
     }

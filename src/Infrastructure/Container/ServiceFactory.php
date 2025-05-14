@@ -2,7 +2,6 @@
 
 namespace BookStore\Infrastructure\Container;
 
-// Use statements for Author components
 use BookStore\Application\BussinesLogic\RepositoryInterfaces\AuthorRepositoryInterface;
 use BookStore\Application\BussinesLogic\RepositoryInterfaces\BookRepositoryInterface;
 use BookStore\Application\BussinesLogic\ServiceInterfaces\AuthorServiceInterface;
@@ -20,25 +19,30 @@ use Exception;
 use InvalidArgumentException;
 use RuntimeException;
 
-// Use statement for Database connection
 
-// Use statements for NEW Book components
-
-// Using for unknown repository type errors
 
 /**
  * Factory class responsible for creating instances of repositories, services, and controllers.
- * Manages dependencies and repository type switching for Authors and Books.
+ *
+ * This factory class is responsible for managing dependencies and switching between different repository types
+ * (MySQL or Session-based) for Authors and Books. It uses the ServiceRegistry to register and retrieve instances.
  */
 class ServiceFactory
 {
     /**
-     * @throws Exception
+     * Initializes the service container by registering all required services, repositories, and controllers.
+     *
+     * This method sets up the following components:
+     * - Author and Book repositories (MySQL-based)
+     * - Author and Book services
+     * - Author and Book controllers
+     *
+     * All components are registered in the ServiceRegistry for global access.
+     *
+     * @throws Exception If any dependency fails to initialize.
      */
     public static function init(): void
     {
-
-        //Author bootstrap
 /*
         ServiceRegistry::set(
             AuthorRepositoryInterface::class,
@@ -75,8 +79,6 @@ class ServiceFactory
             BookController::class,
             new BookController(ServiceRegistry::get(BookServiceInterface::class))
         );
-
-
     }
 
 }

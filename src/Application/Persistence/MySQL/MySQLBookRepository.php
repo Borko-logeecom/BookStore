@@ -12,11 +12,11 @@ use PDO;
 use PDOException;
 use RuntimeException;
 
-// Using RuntimeException for database errors
-
 /**
  * MySQL implementation of the BookRepositoryInterface.
- * Interacts with the 'books' table in the database.
+ *
+ * This class provides methods to interact with the 'books' table in the database,
+ * including creating, reading, and deleting book records.
  */
 class MySQLBookRepository implements BookRepositoryInterface
 {
@@ -25,13 +25,14 @@ class MySQLBookRepository implements BookRepositoryInterface
     /**
      * Finds all books belonging to a specific author.
      *
-     * @param Author $author
+     * @param Author $author The author whose books are being retrieved.
      * @return array An array of book data arrays, or an empty array if no books are found.
      * Each book array includes keys 'id', 'author_id', 'title', 'publication_year'.
      */
     public function findByAuthorId(Author $author): array
     {
-        $stmt = DatabaseConnection::getInstance()->getConnection()->prepare("SELECT * FROM {$this->tableName} WHERE author_id = :author_id");
+        $stmt = DatabaseConnection::getInstance()->getConnection()
+            ->prepare("SELECT * FROM {$this->tableName} WHERE author_id = :author_id");
         $id = $author->getId();
         $stmt->bindParam(':author_id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -43,13 +44,13 @@ class MySQLBookRepository implements BookRepositoryInterface
      * Finds a single book by its ID.
      *
      * @param int $bookId The ID of the book.
-     * @return array|null An associative array representing the book data, or null if the book is not found.
-     * The book array includes keys 'id', 'author_id', 'title', 'publication_year'.
+     * @return array|null An associative array representing the book data, or null if not found.
      * @throws RuntimeException If a database error occurs.
      */
     public function getById(int $bookId): ?array
     {
-        $stmt = DatabaseConnection::getInstance()->getConnection()->prepare("SELECT * FROM {$this->tableName} WHERE id = :id");
+        $stmt = DatabaseConnection::getInstance()->getConnection()
+            ->prepare("SELECT * FROM {$this->tableName} WHERE id = :id");
         $stmt->bindParam(':id', $bookId, PDO::PARAM_INT);
         $stmt->execute();
         $book = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -59,14 +60,16 @@ class MySQLBookRepository implements BookRepositoryInterface
 
 
     /**
-     * Creates a new book record in the data store.
+     * Creates a new book record in the database.
      *
-     * @param Book $book
-     * @return int The data of the newly created book (including its generated 'id'), or null on failure.
+     * @param Book $book The book object containing the data to be saved.
+     * @return int The ID of the newly created book.
+     * @throws RuntimeException If a database error occurs.
      */
     public function create(Book $book): int
     {
-        $stmt = DatabaseConnection::getInstance()->getConnection()->prepare("INSERT INTO {$this->tableName} (title, publish_year, author_id) VALUES (:title, :year, :author_id)");
+        $stmt = DatabaseConnection::getInstance()->getConnection()
+            ->prepare("INSERT INTO {$this->tableName} (title, publish_year, author_id) VALUES (:title, :year, :author_id)");
 
         $authorId = $book->getAuthorId();
         $stmt->bindParam(':author_id', $authorId, PDO::PARAM_INT);
@@ -81,7 +84,7 @@ class MySQLBookRepository implements BookRepositoryInterface
     }
 
     /**
-     * Deletes a book record from the data store by its ID.
+     * Deletes a book record from the database by its ID.
      *
      * @param int $bookId The ID of the book to delete.
      * @return bool True on success, false on failure.
@@ -89,7 +92,8 @@ class MySQLBookRepository implements BookRepositoryInterface
      */
     public function delete(int $bookId): bool
     {
-        $stmt = DatabaseConnection::getInstance()->getConnection()->prepare("DELETE FROM {$this->tableName} WHERE id = :id");
+        $stmt = DatabaseConnection::getInstance()->getConnection()
+            ->prepare("DELETE FROM {$this->tableName} WHERE id = :id");
         $stmt->bindParam(':id', $bookId, PDO::PARAM_INT);
 
         return $stmt->execute();
@@ -104,7 +108,8 @@ class MySQLBookRepository implements BookRepositoryInterface
      */
     public function deleteAllByAuthorId(int $authorId): bool
     {
-        $stmt = DatabaseConnection::getInstance()->getConnection()->prepare("DELETE FROM {$this->tableName} WHERE author_id = :author_id");
+        $stmt = DatabaseConnection::getInstance()->getConnection()
+            ->prepare("DELETE FROM {$this->tableName} WHERE author_id = :author_id");
         $stmt->bindParam(':author_id', $authorId, PDO::PARAM_INT);
 
         return $stmt->execute();

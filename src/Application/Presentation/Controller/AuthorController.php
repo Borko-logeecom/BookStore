@@ -10,6 +10,9 @@ use BookStore\Infrastructure\Response\Response;
 
 /**
  * Controller class for handling author-related user requests.
+ *
+ * This controller provides methods for displaying author lists, creating, editing, and deleting authors.
+ * It uses an AuthorServiceInterface implementation for business logic.
  */
 class AuthorController
 {
@@ -28,6 +31,7 @@ class AuthorController
 
     /**
      * Displays the list of authors.
+     *
      * Fetches authors from the service and returns an HtmlResponse.
      *
      * @return HtmlResponse The HTTP response containing the author list HTML.
@@ -47,6 +51,7 @@ class AuthorController
 
     /**
      * Displays the form for creating a new author.
+     *
      * Returns an HtmlResponse containing the form HTML.
      *
      * @return HtmlResponse The HTTP response containing the author creation form HTML.
@@ -64,8 +69,6 @@ class AuthorController
 
     /**
      * Displays the form for editing an existing author, identified by ID.
-     * Fetches author data from the service, prepares it for the view,
-     * and returns an HtmlResponse containing the form HTML or an error message.
      *
      * @param int $id The ID of the author to edit.
      * @return HtmlResponse The HTTP response containing the author edit form HTML or an error message.
@@ -97,6 +100,7 @@ class AuthorController
 
     /**
      * Handles the submission of the author creation form.
+     *
      * Validates input, creates the author via the service, and returns a RedirectResponse.
      *
      * @return RedirectResponse An HTTP redirect response.
@@ -127,10 +131,11 @@ class AuthorController
 
     /**
      * Handles the submission of the author editing form.
-     * Updates the author via the service and redirects.
+     *
+     * Updates the author via the service and redirects to the author list.
      *
      * @param int $id The ID of the author being processed for edit.
-     * @return RedirectResponse
+     * @return RedirectResponse The HTTP redirect response.
      */
     public function processEdit(int $id): RedirectResponse
     {
@@ -151,6 +156,7 @@ class AuthorController
 
     /**
      * Handles the deletion of an author.
+     *
      * Deletes the author via the service and returns a RedirectResponse.
      *
      * @param int $id The ID of the author to delete.

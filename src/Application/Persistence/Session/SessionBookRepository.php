@@ -11,7 +11,9 @@ use BookStore\Infrastructure\Session\SessionHandler;
 
 /**
  * Session-based implementation of the BookRepositoryInterface.
- * Interacts with the 'books' data stored in the PHP session.
+ *
+ * This repository provides methods to create, read, and delete book data stored in PHP sessions.
+ * It uses a session-stored counter to assign unique IDs to books.
  */
 class SessionBookRepository implements BookRepositoryInterface
 {
@@ -20,6 +22,10 @@ class SessionBookRepository implements BookRepositoryInterface
 
     private SessionHandler $sessionHandler;
 
+    /**
+     * Constructor.
+     * Initializes the session handler and sets the book ID counter if not already set.
+     */
     public function __construct()
     {
         $this->sessionHandler = SessionHandler::getInstance();
@@ -30,12 +36,24 @@ class SessionBookRepository implements BookRepositoryInterface
         }
     }
 
+    /**
+     * Finds all books belonging to a specific author.
+     *
+     * @param Author $author The author whose books are being retrieved.
+     * @return array An array of book data for the specified author.
+     */
     public function findByAuthorId(Author $author): array
     {
         $booksByAuthor = $this->sessionHandler->get(self::SESSION_KEY_BOOKS)[$author->getId()] ?? [];
         return $booksByAuthor;
     }
 
+    /**
+     * Retrieves a book by its ID.
+     *
+     * @param int $bookId The ID of the book to retrieve.
+     * @return array|null The book data as an associative array, or null if not found.
+     */
     public function getById(int $bookId): ?array
     {
         $allBooks = $this->sessionHandler->get(self::SESSION_KEY_BOOKS) ?? [];
@@ -51,6 +69,14 @@ class SessionBookRepository implements BookRepositoryInterface
         return null;
     }
 
+    /**
+     * Creates a new book in the session.
+     *
+     * The book is stored under the associated author's ID, and a unique global book ID is assigned.
+     *
+     * @param Book $book The book object to be saved.
+     * @return int The ID of the newly created book.
+     */
     public function create(Book $book): int
     {
         $allBooks = $this->sessionHandler->get(self::SESSION_KEY_BOOKS) ?? [];
@@ -79,6 +105,12 @@ class SessionBookRepository implements BookRepositoryInterface
         return $bookData['id'];
     }
 
+    /**
+     * Deletes a book by its ID.
+     *
+     * @param int $bookId The ID of the book to delete.
+     * @return bool True on success, false on failure.
+     */
     public function delete(int $bookId): bool
     {
         $allBooks = $this->sessionHandler->get(self::SESSION_KEY_BOOKS) ?? [];
@@ -92,6 +124,12 @@ class SessionBookRepository implements BookRepositoryInterface
         return true;
     }
 
+    /**
+     * Deletes all books belonging to a specific author.
+     *
+     * @param int $authorId The ID of the author whose books should be deleted.
+     * @return bool True on success, false on failure.
+     */
     public function deleteAllByAuthorId(int $authorId): bool
     {
         $allBooks = $this->sessionHandler->get(self::SESSION_KEY_BOOKS) ?? [];
